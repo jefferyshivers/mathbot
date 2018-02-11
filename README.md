@@ -1,4 +1,4 @@
-# CatBot
+# MathBot
 
 TODO
 

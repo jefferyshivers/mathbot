@@ -5,7 +5,7 @@
   "scripts": {
     "build": "rm -rf build && mkdir build && ./node_modules/.bin/webpack",
     "build:ex": "npm run build && cp build/somebot.min.js example/somebot.js",
-    "build:prod": "npm run build && gzip -f -k build/somebot.min.js && cp build/somebot.min.js example/somebot.js"
+    "build:zip": "npm run build && gzip -f -k build/somebot.min.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
