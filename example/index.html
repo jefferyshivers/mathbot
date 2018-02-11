@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mathbot</title>
+  </head>
+  <body>
+
+    <style>
+      body, html {
+        width: 100vw;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      body div::-webkit-scrollbar {
+        display: none;
+      }
+
+      body {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .somebot-trigger {
+        background: rgb(209, 250, 209);
+        font-size: 14px;
+        font-family: sans-serif;
+        border-radius: 6px;
+        transition: 200ms;
+        padding: 10px;
+      }
+
+      .somebot-trigger:hover {
+        box-shadow: 0 0 6px rgba(0,0,0,.2);
+        cursor: pointer;
+      }
+    </style>
+
+    <div class="somebot-trigger">CHAT</div>
+
+    <div 
+      id="somebot" 
+      data-props='{
+        "styles": {
+          "color": "white",
+          "background": "rgb(0, 83, 151)"
+        },
+        "name": "MathBot",
+        "endpoint": "https://e099nl4b9j.execute-api.us-east-1.amazonaws.com/test/sessions"
+      }'
+    />
+    <script type="text/javascript" src="./somebot.js"></script>
+
+
+  </body>
+</html>

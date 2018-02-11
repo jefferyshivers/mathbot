@@ -1,0 +1,29 @@
+{
+  "name": "somebot",
+  "version": "1.0.0",
+  "main": "build/somebot.js",
+  "scripts": {
+    "build": "rm -rf build && mkdir build && ./node_modules/.bin/webpack",
+    "build:ex": "npm run build && cp build/somebot.min.js example/somebot.js",
+    "build:prod": "npm run build && gzip -f -k build/somebot.min.js && cp build/somebot.min.js example/somebot.js"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^0.28.9",
+    "node-sass": "^4.7.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.20.1",
+    "webpack": "^3.10.0"
+  },
+  "repository": {
+    "url": ""
+  },
+  "license": "MIT",
+  "description": "somebot"
+}
