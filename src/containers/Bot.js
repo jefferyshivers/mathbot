@@ -148,9 +148,7 @@ class Bot extends Component {
     let botStyles = this.state.open ? { opacity: 1 } : { opacity: 0 };
 
     if (this.state.botDiv) {
-      botStyles.right = this.state.open
-        ? "20px"
-        : `${-1 * (this.state.botDiv.clientWidth + 40)}px`;
+      botStyles.right = this.state.open ? "20px" : "-540px";
     }
 
     return (

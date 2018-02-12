@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>mathbot</title>
+    <title>somebot</title>
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
   <body>
 
@@ -13,6 +15,19 @@
         min-height: 100vh;
         margin: 0;
         padding: 0;
+        font-family: 'Comfortaa', cursive;
+        background: rgb(51, 51, 51);
+      }
+
+      h1, h2 {
+        margin: 0;
+      }
+      h1 {
+        margin: 0 0 20px 0;
+        font-size: 50px;
+      }
+      h2 {
+        font-size: 30px;
       }
 
       body div::-webkit-scrollbar {
@@ -21,12 +36,12 @@
 
       body {
         position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
       }
 
       .somebot-trigger {
+        position: fixed;
+        right: 15px;
+        bottom: 15px;
         background: rgb(209, 250, 209);
         font-size: 14px;
         font-family: sans-serif;
@@ -39,22 +54,225 @@
         box-shadow: 0 0 6px rgba(0,0,0,.2);
         cursor: pointer;
       }
+
+      header {
+        background: rgb(0, 165, 177);
+        color: white;
+        padding: 50px;
+        display: flex;
+        justify-content: center;
+      }
+
+      somebot {
+        color: rgb(0, 165, 177);
+      }
+
+      header inner {
+        width: 100%;
+        max-width: 1000px;
+      }
+
+      #github-star {
+        position: absolute;
+        top: 20px;
+        right: 50px;
+      }
+
+      section {
+        padding: 40px 0;
+        display: flex;
+        justify-content: center;
+      }
+      section:nth-of-type(odd) {
+        background: rgb(51, 51, 51);
+      }
+      section:nth-of-type(even) {
+        background: rgb(61, 61, 61);
+      }
+
+      section inner {
+        width: calc(100% - 40px);
+        max-width: 1000px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      section inner h2,
+      section inner h3 {
+        width: 100%;
+        color: white;
+      }
+
+      section inner h3 {
+        margin: 20px 0 0 0;
+      }
+
+      section inner p,
+      section inner code,
+      section inner pre {
+        width: 100%;
+        margin: 15px auto;
+      }
+
+      section inner p {
+        line-height: 24px;
+        color: rgb(212, 212, 212);
+      }
+
+      section inner code,
+      section inner pre {
+        background: rgb(36, 36, 36);
+        color: rgb(240, 240, 240);
+        padding: 10px;
+        overflow-x: scroll;
+      }
+      section inner p code,
+      section inner ul li code {
+        background: rgb(44, 44, 44);
+        color: rgb(212, 212, 212);
+        padding: 5px;
+      }
+      section inner ul {
+        padding: 0;
+        width: 100%;
+      }
+      section inner li {
+        margin: 5px 0 5px 15px;
+        line-height: 24px;
+        color: white;
+      }
     </style>
 
-    <div class="somebot-trigger">CHAT</div>
+    <header>
+      <inner>
+        <h1>somebot.js</h1>
+        <h2>a reusable chatbot component with a friendly, simple API</h2>
+      </inner>
+      <div id="github-star">
+        <a class="github-button" href="https://github.com/jefferyshivers/somebot" data-size="large" data-show-count="true" aria-label="Star jefferyshivers/somebot on GitHub">Star</a>      
+      </div>
+    </header>
+
+    <section>
+      <inner>
+        <h2>Getting started</h2>
+      </inner>
+    </section>
+
+    <section>
+      <inner>
+        <p>All you need to create the front end for your bot is a trigger:</p>
+        <pre>
+&#60;div class="somebot-trigger"&#62;Chat with MathBot&#60;/div&#62;</pre>
+        <p>an element with the id <code class="inline">somebot</code> and whatever data you want to pass in:</p>
+        <pre>
+&#60;div 
+  id="somebot" 
+  data-props='{
+    "styles": {
+      "color": "white",
+      "background": "rgb(0, 83, 151)"
+    },
+    "name": "MathBot",
+    "endpoint": "https://e099nl4b9j.execute-api.us-east-1.amazonaws.com/test/sessions"
+  }'
+&#47;&#62;</pre>
+        <p>and a script that loads the <somebot>somebot</somebot> library:</p>
+        <pre>&#60;script type="text/javascript" src="https://mathbot.s3.amazonaws.com/somebot.min.js"&#62;&#60;/script&#62;</pre>
+      </inner>
+    </section>
+
+    <section>
+      <inner>
+        <p>
+          You'll need to supply your own backend, which can be a server that the app is 
+          sitting on top of, or simply a serverless cloud function. You can handle the 
+          logic of your chat however you'd like; somebot is built to be a super flexible component 
+          agnostic of the actual context of its use.
+        </p>
+      </inner>
+    </section>
+
+    <section>
+      <inner>
+        <h2>How it works</h2>
+        <p>
+          When <somebot>somebot</somebot> is first mounted, it sends a POST request with the body <code>{type: "newsession"}</code> to your endpoint.
+          Subsequent requests are triggered when the user submits a message (by pressing Return in the input field).
+        </p>
+        <p>
+          Messages and session IDs are persisted in state until the window is closed. Each time the bot is loaded, the user
+          begins a new session.
+        </p>
+      </inner>
+    </section>
+
+    <section>
+      <inner>
+        <h2>API</h2>
+        <h3>Custom properties</h3>
+        <p>
+          Use the <code>data-props</code> attribute to set the endpoint, name and any styles to your bot which will override the defaults.
+          This must be a quoted JSON object, which will be parsed by the bot accordingly. Currently, the available properties are:
+        </p>
+        <ul>
+          <li><code>name</code>: the name that will appear in the chatbot header</li>
+          <li><code>endpoint</code>: the URL where </li>
+          <li>
+            <code>styles</code>: an object, which can have the following properties:
+            <ul>
+              <li><code>color</code>: the text color of the header and user messages</li>
+              <li><code>background</code>: the background color of the header and user messages</li>
+            </ul>
+          </li>
+        </ul>
+        
+
+        <h3>type (string)</h3>
+        <p>
+          Must be either "newsession" or "message".
+        </p>
+
+        <h3>sessionid (string)</h3>
+        <p>
+          Expected in the initial response when the bot is mounted. Subsequently sent back and forth with each new request
+          to keep track of the conversation (mostly for the sake of the back end if it needs this feature). If you don't 
+          need it, you can pass an arbitrary value to this property.
+        </p>
+
+        <h3>message (string)</h3>
+        <p>
+          For every transaction sent or received with the type as "message", the value of <code>message</code> property is recorded into the 
+          conversation and displayed in the scrolling chat window.
+        </p>
+
+        <h3>meta (object)</h3>
+        <p>
+          <somebot>somebot</somebot> looks for a <code>meta</code> property in responses from the endpoint (but doesn't require it), and will pass it back
+          in the first subsequent message submitted from the user. This could be
+          useful if you want to retain information about the context of the message when the user
+          responds.
+        </p>
+      </inner>
+    </section>
+
+
+
+    <div class="somebot-trigger">Chat with MathBot</div>
 
     <div 
       id="somebot" 
       data-props='{
         "styles": {
           "color": "white",
-          "background": "rgb(0, 83, 151)"
+          "background": "rgb(162, 11, 18)"
         },
         "name": "MathBot",
         "endpoint": "https://e099nl4b9j.execute-api.us-east-1.amazonaws.com/test/sessions"
       }'
     />
-    <script type="text/javascript" src="https://mathbot.s3.amazonaws.com/somebot.min.js"></script>
+    <!-- <script type="text/javascript" src="https://mathbot.s3.amazonaws.com/somebot.min.js"></script> -->
+    <script type="text/javascript" src="somebot.js"></script>
 
   </body>
 </html>
