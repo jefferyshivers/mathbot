@@ -49,7 +49,11 @@ const isValid = ({ test, type, choices }) =>
 
 const areValid = validations => validations.every(isValid);
 
-const chat = ({ type, meta = {}, message = "" }) => {
+const chat = ({ base, path, callback }) => ({
+  type,
+  meta = {},
+  message = ""
+}) => {
   if (
     !areValid([
       {
@@ -69,15 +73,13 @@ const chat = ({ type, meta = {}, message = "" }) => {
   )
     throw Error("Invalid properties given in chat invocation");
 
-  return endpointData => cb => {
-    const endpoint = composeEndpoint(endpointData);
+  const endpoint = composeEndpoint({ base, path });
 
-    if (cb) {
-      return fetch(endpoint, { method: "POST" })
-        .then(res => res.json())
-        .then(data => cb(data));
-    }
-  };
+  if (callback) {
+    return fetch(endpoint, { method: "POST" })
+      .then(res => res.json())
+      .then(data => callback(data));
+  }
 };
 
 module.exports = {

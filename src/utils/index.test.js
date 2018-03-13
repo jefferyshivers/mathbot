@@ -22,6 +22,18 @@
  */
 
 import { composeEndpoint, isValid, areValid, chat } from "./index.js";
+import sinon from "sinon";
+
+const jsonOK = body => {
+  const mockResponse = new Response(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      "Content-type": "application/json"
+    }
+  });
+
+  return Promise.resolve(mockResponse);
+};
 
 describe("composeEndpoint", () => {
   it("Should compose an absolute endpoint", () => {
@@ -85,27 +97,35 @@ describe("areValid", () => {
 });
 
 describe("chat", () => {
-  it("Should throw an error if given invalid properties", () => {
-    let invalidChat = chat.bind(chat, {});
+  let newChat = chat({
+    base: "https://base.com",
+    path: "path",
+    callback: data => {
+      return {
+        response: "hi back"
+      };
+    }
+  });
+  let message = {};
+  sinon.stub(window, "fetch").returns(jsonOK(message));
 
-    expect(invalidChat).to.throw(
+  it("Should throw an error if given invalid properties", async () => {
+    message = {};
+
+    expect(newChat.bind(newChat, message)).to.throw(
       Error,
       "Invalid properties given in chat invocation"
     );
   });
 
-  it("Should return a chain of functions if given valid properties", () => {
-    let validChat = chat({ type: "string", message: "a message" });
-    let validChatWithoutEndpoint = validChat();
-    let validChatWithEndpoint = validChat({
-      base: "https://base.com",
-      path: "path"
-    });
-    let validChatWithEndpointWithCallback = validChatWithEndpoint(data => data);
+  it("Should return callback with valid properties", async () => {
+    message = {
+      type: "string",
+      message: "hi"
+    };
 
-    expect(validChat).to.be.a("function");
-    expect(validChatWithoutEndpoint).to.be.a("function");
-    expect(validChatWithEndpoint).to.be.a("function");
-    expect(validChatWithEndpointWithCallback).to.be.a("promise");
+    return newChat(message).then(result => {
+      expect(result.response).to.deep.equal("hi back");
+    });
   });
 });
