@@ -22,6 +22,15 @@
  */
 
 /**
+ * Throw an error.
+ * @param {string} message
+ * @returns {Error} a new error
+ */
+const error = message => {
+  throw Error(message);
+};
+
+/**
  * Compose an endpoint.
  * @param {Object} inputs
  * @param {string} [inputs.base] the base of the path if it is absolute
@@ -83,6 +92,7 @@ const chat = ({ base, path, callback }) => ({
 };
 
 module.exports = {
+  error,
   composeEndpoint,
   isValid,
   areValid,
