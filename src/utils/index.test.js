@@ -109,7 +109,7 @@ describe("chat", () => {
   let message = {};
   sinon.stub(window, "fetch").returns(jsonOK(message));
 
-  it("Should throw an error if given invalid properties", async () => {
+  it("Should throw an error if given invalid properties", () => {
     message = {};
 
     expect(newChat.bind(newChat, message)).to.throw(
