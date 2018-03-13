@@ -62,6 +62,9 @@ module.exports = function(config) {
     concurrency: Infinity,
 
     webpack: {
+      performance: {
+        hints: false
+      },
       module: {
         rules: [
           {
