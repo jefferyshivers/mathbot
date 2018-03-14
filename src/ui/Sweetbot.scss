@@ -1,0 +1,13 @@
+.Sweetbot {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+
+  --accentColor: cyan;
+
+  > div {
+    &:first-of-type {
+      background-color: var(--accentColor);
+    }
+  }
+}

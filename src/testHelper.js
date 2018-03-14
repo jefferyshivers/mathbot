@@ -24,7 +24,14 @@
 import "babel-polyfill";
 
 import React from "react";
-import { mount } from "enzyme";
+import Enzyme, { mount } from "enzyme";
+import chai from "chai";
+import Adapter from "enzyme-adapter-react-16";
+// import chaiEnzyme from "chai-enzyme";
+
+// chai.use(chaiEnzyme());
+
+Enzyme.configure({ adapter: new Adapter() });
 
 // function to require all modules for a given context
 let requireAll = requireContext => {

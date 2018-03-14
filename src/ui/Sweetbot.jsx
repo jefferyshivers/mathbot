@@ -22,9 +22,36 @@
  */
 
 import React, { Component } from "react";
+import defaultprops from "./defaultprops.js";
+import "./Sweetbot.scss";
 
 export default class Sweetbot extends Component {
+  state = {
+    meta: {},
+    message: "",
+    messages: []
+  };
+
+  customprops = Object.assign({}, defaultprops, this.props.customprops);
+
+  componentDidMount() {
+    // ...
+    console.log("mounted...");
+  }
+
   render() {
-    return <div>test</div>;
+    const styles = {};
+
+    for (let style in this.customprops.styles) {
+      styles[`--${style}`] = this.customprops.styles[style];
+    }
+
+    return (
+      <div
+        className="Sweetbot"
+        style={styles}
+        name={`${this.customprops.name} chatbot`}
+      />
+    );
   }
 }

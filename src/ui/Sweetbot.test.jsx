@@ -20,3 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+import React from "react";
+import sinon from "sinon";
+import { mount } from "enzyme";
+import Sweetbot from "./Sweetbot.jsx";
+import defaultprops from "./defaultprops.js";
+
+describe("Sweetbot", () => {
+  it("mounts without exploding", () => {
+    let componentDidMount = sinon.spy(Sweetbot.prototype, "componentDidMount");
+    let wrapper = mount(<Sweetbot />);
+
+    expect(wrapper.find(".Sweetbot")).to.have.length(1);
+    expect(componentDidMount.calledOnce).to.equal(true);
+    expect(wrapper.state()).to.deep.equal({
+      meta: {},
+      message: "",
+      messages: []
+    });
+    expect(wrapper.instance().customprops).to.deep.equal(defaultprops);
+  });
+
+  it("applies customprops", () => {
+    let customprops = {
+      styles: { accentColor: "green" }
+    };
+    let wrapper = mount(<Sweetbot customprops={customprops} />);
+
+    expect(wrapper.instance().customprops).to.deep.equal(
+      Object.assign(defaultprops, customprops)
+    );
+  });
+});

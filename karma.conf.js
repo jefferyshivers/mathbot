@@ -8,11 +8,13 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["mocha", "chai"],
+    frameworks: ["mocha", "chai", "enzyme-react-16"],
     plugins: [
       "karma-mocha",
       "karma-chai",
       "karma-webpack",
+      "chai-enzyme",
+      "karma-enzyme-react-16",
       "karma-chrome-launcher"
     ],
 
@@ -62,6 +64,7 @@ module.exports = function(config) {
     concurrency: Infinity,
 
     webpack: {
+      mode: "development",
       performance: {
         hints: false
       },
@@ -77,18 +80,31 @@ module.exports = function(config) {
             exclude: /node_modules/,
             loader: "babel-loader",
             options: {
-              presets: ["env", "react"]
+              presets: ["env", "react", "stage-2"]
             }
+          },
+          {
+            test: /\.scss$/,
+            use: [
+              {
+                loader: "style-loader"
+              },
+              {
+                loader: "css-loader"
+              },
+              {
+                loader: "sass-loader"
+              }
+            ]
           }
         ]
+      },
+      externals: {
+        // cheerio: "window",
+        // "react/addons": true, // important!!
+        // "react/lib/ExecutionEnvironment": true,
+        // "react/lib/ReactContext": true
       }
-      // externals: {
-      //   cheerio: "window",
-      //   "react/addons": "react",
-      //   "react/lib/ExecutionEnvironment": "react",
-      //   "react/lib/ReactContext": "react",
-      //   "react-addons-test-utils": "react-dom"
-      // }
     }
   });
 };
