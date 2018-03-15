@@ -37,8 +37,16 @@ describe("Sweetbot", () => {
     expect(componentDidMount.calledOnce).to.equal(true);
   });
 
+  it("has autoprops", () => {
+    let wrapper = shallow(<Sweetbot auto={true} />);
+
+    expect(wrapper.state().open).to.equal(true);
+    expect(wrapper.state().messages.length).to.equal(1);
+    expect(wrapper.instance().customprops).to.deep.equal(defaultprops(true));
+  });
+
   it("has defaultprops", () => {
-    let wrapper = shallow(<Sweetbot />);
+    let wrapper = shallow(<Sweetbot auto={false} />);
 
     expect(wrapper.state()).to.deep.equal({
       open: false,
@@ -48,28 +56,28 @@ describe("Sweetbot", () => {
       },
       messages: []
     });
-    expect(wrapper.instance().customprops).to.deep.equal(defaultprops);
+    expect(wrapper.instance().customprops).to.deep.equal(defaultprops(false));
   });
 
   it("applies customprops", () => {
     let customprops = {
       styles: { accentColor: "green" }
     };
-    let wrapper = mount(<Sweetbot customprops={customprops} />);
+    let wrapper = mount(<Sweetbot auto={false} customprops={customprops} />);
 
     expect(wrapper.instance().customprops).to.deep.equal(
-      Object.assign(defaultprops, customprops)
+      Object.assign(defaultprops(), customprops)
     );
   });
 
   describe("__recordChat()", () => {
     it("exists", () => {
-      let wrapper = mount(<Sweetbot />);
+      let wrapper = mount(<Sweetbot auto={false} />);
       expect(wrapper.instance().__recordChat).to.be.a("function");
     });
 
     it("records a message", () => {
-      let wrapper = mount(<Sweetbot />);
+      let wrapper = mount(<Sweetbot auto={false} />);
       let message = {
         sender: "BOT",
         chat: {
@@ -88,7 +96,7 @@ describe("Sweetbot", () => {
     it("records a default message", () => {
       let customprops = {
         onload: {
-          message: {
+          chat: {
             message: "default test",
             meta: {
               random: "random test"
@@ -96,12 +104,12 @@ describe("Sweetbot", () => {
           }
         }
       };
-      let wrapper = mount(<Sweetbot customprops={customprops} />);
+      let wrapper = mount(<Sweetbot auto={false} customprops={customprops} />);
 
       expect(wrapper.state().messages.length).to.equal(1);
       expect(wrapper.state().messages[0].sender).to.equal("BOT");
       expect(wrapper.state().messages[0].chat).to.deep.equal(
-        customprops.onload.message
+        customprops.onload.chat
       );
     });
   });

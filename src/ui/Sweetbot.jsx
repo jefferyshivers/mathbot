@@ -46,17 +46,21 @@ export default class Sweetbot extends Component {
     messages: []
   };
 
-  customprops = Object.assign({}, defaultprops, this.props.customprops);
+  customprops = Object.assign(
+    {},
+    defaultprops(this.props.auto),
+    this.props.customprops
+  );
 
   componentDidMount() {
     // open the bot on load. default = false
     this.customprops.onload.open && this.setState({ open: true });
 
     // load default message. default = none
-    this.customprops.onload.message &&
+    this.customprops.onload.chat &&
       this.__recordChat({
         sender: "BOT",
-        chat: this.customprops.onload.message
+        chat: this.customprops.onload.chat
       });
   }
 
@@ -89,8 +93,6 @@ export default class Sweetbot extends Component {
       STYLES[`--${style}`] = this.customprops.styles[style];
     }
 
-    const INPUT = <div name={`${this.customprops.name} chatbot input`} />;
-
     const MESSAGES = this.state.messages.map((message, index) => (
       <Message
         key={`message-${index}-${message.sender}`}
@@ -98,14 +100,37 @@ export default class Sweetbot extends Component {
       />
     ));
 
+    const OPTIONS =
+      // TODO handle selectable, multi-selectable, selected
+      this.state.current.meta.select && this.state.current.meta.select.options
+        ? this.state.current.meta.select.options.map(option => {
+            return option;
+          })
+        : null;
+
+    // TODO if meta.inputDisabled, don't remove it from DOM, but make it not-focusable
+    const INPUT = (
+      <div
+        name={`${this.customprops.name} chatbot input`}
+        meta={this.state.current.meta}
+      >
+        {OPTIONS}
+        <input
+          name="text input field"
+          value={this.state.current.message}
+          readOnly={this.state.current.meta.inputDisabled}
+        />
+      </div>
+    );
+
     return (
       <div
         className="Sweetbot"
         style={STYLES}
         name={`${this.customprops.name} chatbot`}
       >
-        {INPUT}
         {MESSAGES}
+        {INPUT}
       </div>
     );
   }
