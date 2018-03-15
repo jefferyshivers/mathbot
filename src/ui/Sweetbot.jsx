@@ -91,8 +91,11 @@ export default class Sweetbot extends Component {
 
     const INPUT = <div name={`${this.customprops.name} chatbot input`} />;
 
-    const MESSAGES = this.state.messages.map(message => (
-      <Message messageprops={message} />
+    const MESSAGES = this.state.messages.map((message, index) => (
+      <Message
+        key={`message-${index}-${message.sender}`}
+        messageprops={message}
+      />
     ));
 
     return (

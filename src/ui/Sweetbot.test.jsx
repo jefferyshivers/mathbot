@@ -61,4 +61,48 @@ describe("Sweetbot", () => {
       Object.assign(defaultprops, customprops)
     );
   });
+
+  describe("__recordChat()", () => {
+    it("exists", () => {
+      let wrapper = mount(<Sweetbot />);
+      expect(wrapper.instance().__recordChat).to.be.a("function");
+    });
+
+    it("records a message", () => {
+      let wrapper = mount(<Sweetbot />);
+      let message = {
+        sender: "BOT",
+        chat: {
+          message: "test",
+          meta: {}
+        }
+      };
+
+      expect(wrapper.state().messages.length).to.equal(0);
+      wrapper.instance().__recordChat(message);
+      expect(wrapper.state().messages.length).to.equal(1);
+      expect(wrapper.state().messages[0].sender).to.equal("BOT");
+      expect(wrapper.state().messages[0].chat).to.deep.equal(message.chat);
+    });
+
+    it("records a default message", () => {
+      let customprops = {
+        onload: {
+          message: {
+            message: "default test",
+            meta: {
+              random: "random test"
+            }
+          }
+        }
+      };
+      let wrapper = mount(<Sweetbot customprops={customprops} />);
+
+      expect(wrapper.state().messages.length).to.equal(1);
+      expect(wrapper.state().messages[0].sender).to.equal("BOT");
+      expect(wrapper.state().messages[0].chat).to.deep.equal(
+        customprops.onload.message
+      );
+    });
+  });
 });
