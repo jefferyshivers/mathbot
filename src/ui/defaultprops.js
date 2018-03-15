@@ -1,8 +1,11 @@
 const defaultprops = {
+  name: "sweetbot",
   styles: {
     accentColor: "purple"
   },
-  name: "sweetbot"
+  onload: {
+    open: false
+  }
 };
 
 export default defaultprops;

@@ -23,20 +23,29 @@
 
 import React from "react";
 import sinon from "sinon";
-import { mount } from "enzyme";
+import { mount, shallow } from "enzyme";
 import Sweetbot from "./Sweetbot.jsx";
 import defaultprops from "./defaultprops.js";
 
 describe("Sweetbot", () => {
   it("mounts without exploding", () => {
     let componentDidMount = sinon.spy(Sweetbot.prototype, "componentDidMount");
-    let wrapper = mount(<Sweetbot />);
+    let wrapper = shallow(<Sweetbot />);
 
     expect(wrapper.find(".Sweetbot")).to.have.length(1);
+    expect(wrapper.find(".Sweetbot").props().name).to.equal("sweetbot chatbot");
     expect(componentDidMount.calledOnce).to.equal(true);
+  });
+
+  it("has defaultprops", () => {
+    let wrapper = shallow(<Sweetbot />);
+
     expect(wrapper.state()).to.deep.equal({
-      meta: {},
-      message: "",
+      open: false,
+      current: {
+        meta: {},
+        message: ""
+      },
       messages: []
     });
     expect(wrapper.instance().customprops).to.deep.equal(defaultprops);

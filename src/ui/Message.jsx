@@ -21,22 +21,10 @@
  * THE SOFTWARE.
  */
 
-import "babel-polyfill";
+import React, { Component } from "react";
 
-import React from "react";
-import Enzyme, { mount } from "enzyme";
-import chai from "chai";
-import Adapter from "enzyme-adapter-react-16";
-
-Enzyme.configure({ adapter: new Adapter() });
-
-// function to require all modules for a given context
-let requireAll = requireContext => {
-  requireContext.keys().forEach(requireContext);
+const Message = props => {
+  return <div className="Message" />;
 };
 
-// require all js files except testHelper.js in the test folder
-requireAll(require.context("./", true, /^((?!testHelper).)*\.jsx?$/));
-
-// output to the browser's console when the tests run
-console.info(`TESTS RAN AT ${new Date().toLocaleTimeString()}`);
+export default Message;
