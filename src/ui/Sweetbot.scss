@@ -12,8 +12,8 @@
   --sb-accentColor: var(--accentColor, --default-accentColor);
 
   // shapes
-  --sb-shape-rounded: 4em 4em 2em 2em;
-  --sb-shape-square: 0;
+  --sb-shape-rounded: 25px 25px 10px 10px;
+  --sb-shape-square: 3px;
   --default-shape: shape('rounded');
   --shape: 'rounded';
   --sb-shape: var(shape(--shape), --default-shape);
@@ -25,7 +25,16 @@
   display: flex;
 
   > div {
-    &:first-of-type {
+    width: 100%;
+
+    &:nth-of-type(1) {
+      background-color: var(--sb-accentColor);
+    }
+    &:nth-of-type(2) {
+      height: 100%;
+      background-color: var(--sb-accentColor);
+    }
+    &:nth-of-type(3) {
       background-color: var(--sb-accentColor);
     }
   }
