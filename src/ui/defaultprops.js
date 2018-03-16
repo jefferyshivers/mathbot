@@ -21,11 +21,14 @@
  * THE SOFTWARE.
  */
 
+const assign = require("assign-deep");
+
 const defaults = {
   name: "sweetbot",
   styles: {
     shape: "3px",
-    accentColor: "purple"
+    accentColor: "rgb(0,100,155)",
+    headerColor: "white"
   },
   onload: {
     open: false
@@ -38,8 +41,7 @@ const defaults = {
 
 const auto = {
   styles: {
-    shape: "25px 25px 10px 10px",
-    accentColor: "green"
+    shape: "25px 25px 10px 10px"
   },
   onload: {
     open: true,
@@ -57,6 +59,6 @@ const auto = {
  * @returns {Object} default props
  */
 const defaultprops = autoprops =>
-  autoprops ? Object.assign({}, defaults, auto) : Object.assign({}, defaults);
+  autoprops ? assign({}, defaults, auto) : Object.assign({}, defaults);
 
 export default defaultprops;

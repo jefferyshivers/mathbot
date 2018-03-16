@@ -74,13 +74,12 @@ export default class Sweetbot extends Component {
 
   _postChat() {
     const { base, path } = this.customprops.endpoint;
+    this._recordChat({ sender: "HUMAN", chat: this.state.current });
 
     let post = API.chat({
       base,
       path,
       callback: data => {
-        this._recordChat({ sender: "HUMAN", chat: this.state.current });
-
         if (data.message && data.meta) {
           this._recordChat({
             sender: "SWEETBOT",
@@ -134,22 +133,32 @@ export default class Sweetbot extends Component {
       STYLES[`--${style}`] = this.customprops.styles[style];
     }
 
-    const HEADER = <div />;
+    const HEADER = (
+      <div>
+        <div>{this.customprops.name}</div>
+        <div>-</div>
+        <div>x</div>
+      </div>
+    );
 
-    const MESSAGES = this.state.messages.map((message, index) => (
-      <Message
-        key={`message-${index}-${message.sender}`}
-        messageprops={message}
-      />
-    ));
+    const MESSAGES = (
+      <div>
+        {this.state.messages.map((message, index) => (
+          <Message
+            key={`message-${index}-${message.sender}`}
+            messageprops={message}
+          />
+        ))}
+      </div>
+    );
 
-    const OPTIONS =
-      // TODO handle selectable, multi-selectable, selected
-      this.state.current.meta.select && this.state.current.meta.select.options
-        ? this.state.current.meta.select.options.map(option => {
-            return option;
-          })
-        : null;
+    const OPTIONS = <div />;
+    // TODO handle selectable, multi-selectable, selected
+    // this.state.current.meta.select && this.state.current.meta.select.options
+    //   ? this.state.current.meta.select.options.map(option => {
+    //       return option;
+    //     })
+    //   : null;
 
     // TODO if meta.inputDisabled, don't remove it from DOM, but make it not-focusable
     const INPUT = (
@@ -158,11 +167,16 @@ export default class Sweetbot extends Component {
         meta={this.state.current.meta}
       >
         {OPTIONS}
-        <input
-          name="text input field"
-          value={this.state.current.message}
-          disabled={this.state.current.meta.inputDisabled ? true : false}
-        />
+        <div>
+          <div>
+            <input
+              name="text input field"
+              value={this.state.current.message}
+              disabled={this.state.current.meta.inputDisabled ? true : false}
+            />
+          </div>
+          <div>>>></div>
+        </div>
       </div>
     );
 
