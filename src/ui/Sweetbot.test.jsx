@@ -27,6 +27,17 @@ import { mount, shallow } from "enzyme";
 import Sweetbot from "./Sweetbot.jsx";
 import defaultprops from "./defaultprops.js";
 
+const jsonOk = body => {
+  const mockResponse = new Response(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      "Content-type": "application/json"
+    }
+  });
+
+  return Promise.resolve(mockResponse);
+};
+
 describe("Sweetbot", () => {
   it("mounts without exploding", () => {
     let componentDidMount = sinon.spy(Sweetbot.prototype, "componentDidMount");
@@ -63,21 +74,21 @@ describe("Sweetbot", () => {
     let customprops = {
       styles: { accentColor: "green" }
     };
-    let wrapper = mount(<Sweetbot auto={false} customprops={customprops} />);
+    let wrapper = shallow(<Sweetbot auto={false} customprops={customprops} />);
 
     expect(wrapper.instance().customprops).to.deep.equal(
       Object.assign(defaultprops(), customprops)
     );
   });
 
-  describe("__recordChat()", () => {
+  describe("_recordChat()", () => {
     it("exists", () => {
-      let wrapper = mount(<Sweetbot auto={false} />);
-      expect(wrapper.instance().__recordChat).to.be.a("function");
+      let wrapper = shallow(<Sweetbot auto={false} />);
+      expect(wrapper.instance()._recordChat).to.be.a("function");
     });
 
     it("records a message", () => {
-      let wrapper = mount(<Sweetbot auto={false} />);
+      let wrapper = shallow(<Sweetbot auto={false} />);
       let message = {
         sender: "BOT",
         chat: {
@@ -87,7 +98,7 @@ describe("Sweetbot", () => {
       };
 
       expect(wrapper.state().messages.length).to.equal(0);
-      wrapper.instance().__recordChat(message);
+      wrapper.instance()._recordChat(message);
       expect(wrapper.state().messages.length).to.equal(1);
       expect(wrapper.state().messages[0].sender).to.equal("BOT");
       expect(wrapper.state().messages[0].chat).to.deep.equal(message.chat);
@@ -104,13 +115,93 @@ describe("Sweetbot", () => {
           }
         }
       };
-      let wrapper = mount(<Sweetbot auto={false} customprops={customprops} />);
+      let wrapper = shallow(
+        <Sweetbot auto={false} customprops={customprops} />
+      );
 
       expect(wrapper.state().messages.length).to.equal(1);
       expect(wrapper.state().messages[0].sender).to.equal("BOT");
       expect(wrapper.state().messages[0].chat).to.deep.equal(
         customprops.onload.chat
       );
+    });
+  });
+
+  describe("INPUT", () => {
+    it("value can be changed", () => {
+      let wrapper = mount(<Sweetbot auto={false} />);
+      let message = "test input message";
+
+      wrapper.find("input").simulate("change", { target: { value: message } });
+
+      expect(wrapper.state().current.message).to.equal(message);
+      expect(wrapper.find("input").props().disabled).to.be.false;
+    });
+
+    it("can be disabled", () => {
+      let customprops = {
+        onload: {
+          chat: {
+            message: "welcome message",
+            meta: {
+              inputDisabled: true
+            }
+          }
+        }
+      };
+      let wrapper = mount(<Sweetbot auto={false} customprops={customprops} />);
+
+      expect(wrapper.find("input").props().disabled).to.be.true;
+    });
+
+    describe("_postChat()", () => {
+      beforeEach(() => {
+        let stub = sinon.stub(window, "fetch"); //add stub
+        stub.onCall(0).returns(jsonOk({}));
+      });
+
+      afterEach(() => {
+        window.fetch.restore();
+      });
+
+      it("exists", () => {
+        let wrapper = mount(<Sweetbot auto={false} />);
+        expect(wrapper.instance()._postChat).to.be.a("function");
+      });
+
+      it("will not post an empty chat message", () => {
+        let wrapper = mount(<Sweetbot auto={false} />);
+        let postChat = wrapper.instance()._postChat;
+
+        expect(postChat.bind(postChat, null)).to.throw(
+          Error,
+          "Invalid properties given in chat invocation"
+        );
+      });
+
+      it("will post a new chat", () => {
+        let customprops = {
+          endpoint: {
+            base: "https://base.com",
+            path: "path"
+          }
+        };
+        let wrapper = mount(
+          <Sweetbot auto={false} customprops={customprops} />
+        );
+        let postChat = wrapper.instance()._postChat;
+
+        wrapper
+          .find("input")
+          .simulate("change", { target: { value: "test input message" } });
+
+        return wrapper
+          .instance()
+          ._postChat()
+          .then(() => {
+            expect(wrapper.state().messages.length).to.equal(1);
+          });
+      });
     });
   });
 });

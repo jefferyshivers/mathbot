@@ -1,13 +1,32 @@
+@function shape($which) {
+  @return ('--sb-shape-',$which)
+}
+
 .Sweetbot {
+  position: fixed;
+
+  // Create redundant/default fallbacks in case user gives invalid value
+  // accent color (header background, send button color)
+  --default-accentColor: cyan;
+  --accentColor: cyan;
+  --sb-accentColor: var(--accentColor, --default-accentColor);
+
+  // shapes
+  --sb-shape-rounded: 4em 4em 2em 2em;
+  --sb-shape-square: 0;
+  --default-shape: shape('rounded');
+  --shape: 'rounded';
+  --sb-shape: var(shape(--shape), --default-shape);
+
   margin: 0;
   padding: 0;
-  position: absolute;
-
-  --accentColor: cyan;
+  border: var(--sb-shape);
+  overflow: hidden;
+  display: flex;
 
   > div {
     &:first-of-type {
-      background-color: var(--accentColor);
+      background-color: var(--sb-accentColor);
     }
   }
 }

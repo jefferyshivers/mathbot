@@ -24,7 +24,7 @@
 import { composeEndpoint, isValid, areValid, chat } from "./index.js";
 import sinon from "sinon";
 
-const jsonOK = body => {
+const jsonOk = body => {
   const mockResponse = new Response(JSON.stringify(body), {
     status: 200,
     headers: {
@@ -97,6 +97,15 @@ describe("areValid", () => {
 });
 
 describe("chat", () => {
+  beforeEach(() => {
+    let stub = sinon.stub(window, "fetch"); //add stub
+    stub.onCall(0).returns(jsonOk({}));
+  });
+
+  afterEach(() => {
+    window.fetch.restore();
+  });
+
   let newChat = chat({
     base: "https://base.com",
     path: "path",
@@ -106,11 +115,9 @@ describe("chat", () => {
       };
     }
   });
-  let message = {};
-  sinon.stub(window, "fetch").returns(jsonOK(message));
 
   it("Should throw an error if given invalid properties", () => {
-    message = {};
+    let message = {};
 
     expect(newChat.bind(newChat, message)).to.throw(
       Error,
@@ -119,7 +126,7 @@ describe("chat", () => {
   });
 
   it("Should return callback with valid properties", async () => {
-    message = {
+    let message = {
       type: "string",
       message: "hi"
     };

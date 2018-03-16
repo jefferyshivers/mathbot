@@ -28,6 +28,10 @@ const defaults = {
   },
   onload: {
     open: false
+  },
+  endpoint: {
+    base: "base.com",
+    path: "path"
   }
 };
 

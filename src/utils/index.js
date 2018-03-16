@@ -51,8 +51,9 @@ const composeEndpoint = ({ base, path }) => {
  * @param {Array} [inputs.choices] a list of valid values of test
  * @returns {boolean} whether the property is valid or not
  */
-const isValid = ({ test, type, choices }) =>
-  (type && typeof test !== type) || (choices && !choices.includes(test))
+const isValid = ({ test, type, choices, invalid }) =>
+  (type && typeof test !== type) ||
+  ((choices && !choices.includes(test)) || (invalid && invalid.includes(test)))
     ? false
     : true;
 
@@ -65,18 +66,19 @@ const chat = ({ base, path, callback }) => ({
 }) => {
   if (
     !areValid([
-      {
-        test: type,
-        type: "string",
-        choices: ["string", "number"]
-      },
+      // {
+      //   test: type,
+      //   type: "string",
+      //   choices: ["string", "number", "array"]
+      // },
       {
         test: meta,
         type: "object"
       },
       {
         test: message,
-        type: "string"
+        type: "string",
+        invalid: [""]
       }
     ])
   )

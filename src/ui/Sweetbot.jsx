@@ -23,14 +23,16 @@
 
 import React, { Component } from "react";
 import defaultprops from "./defaultprops.js";
+import * as API from "../utils";
 import "./Sweetbot.scss";
 import Message from "./Message.jsx";
 
 export default class Sweetbot extends Component {
   constructor(props) {
     super(props);
-
-    this.__recordChat = this.__recordChat.bind(this);
+    this._changeCurrentMessage = this._changeCurrentMessage.bind(this);
+    this._postChat = this._postChat.bind(this);
+    this._recordChat = this._recordChat.bind(this);
   }
 
   state = {
@@ -58,19 +60,39 @@ export default class Sweetbot extends Component {
 
     // load default message. default = none
     this.customprops.onload.chat &&
-      this.__recordChat({
+      this._recordChat({
         sender: "BOT",
         chat: this.customprops.onload.chat
       });
   }
 
-  __recordChat({ sender, chat }) {
+  _changeCurrentMessage(e) {
+    this.setState({
+      current: { meta: this.state.current.meta, message: e.target.value }
+    });
+  }
+
+  _postChat() {
+    const { base, path } = this.customprops.endpoint;
+
+    let post = API.chat({
+      base,
+      path,
+      callback: data =>
+        this._recordChat({ sender: "BOT", chat: { message: "hi", meta: {} } })
+    });
+
+    return post(this.state.current);
+  }
+
+  _recordChat({ sender, chat }) {
     const timestamp = new Date().toLocaleTimeString();
     const message = { timestamp, sender, chat, adding: true };
 
     this.setState(
       {
-        messages: [...this.state.messages, message]
+        messages: [...this.state.messages, message],
+        current: Object.assign(this.state.current, { meta: chat.meta })
       },
       () =>
         // we do this to animated the new message.
@@ -118,7 +140,7 @@ export default class Sweetbot extends Component {
         <input
           name="text input field"
           value={this.state.current.message}
-          readOnly={this.state.current.meta.inputDisabled}
+          disabled={this.state.current.meta.inputDisabled ? true : false}
         />
       </div>
     );
@@ -128,6 +150,7 @@ export default class Sweetbot extends Component {
         className="Sweetbot"
         style={STYLES}
         name={`${this.customprops.name} chatbot`}
+        onChange={this._changeCurrentMessage}
       >
         {MESSAGES}
         {INPUT}
