@@ -59,4 +59,4 @@ const create = props => {
       : ReactDOM.render(<Sweetbot customprops={props} auto={auto} />, target);
 };
 
-export default create;
+module.exports = { create };

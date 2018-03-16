@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import create from "./index.jsx";
+import { create } from "./index.jsx";
 import sinon from "sinon";
 
 describe("create", () => {

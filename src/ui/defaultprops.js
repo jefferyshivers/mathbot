@@ -24,6 +24,7 @@
 const defaults = {
   name: "sweetbot",
   styles: {
+    shape: "3px",
     accentColor: "purple"
   },
   onload: {
@@ -36,6 +37,10 @@ const defaults = {
 };
 
 const auto = {
+  styles: {
+    shape: "25px 25px 10px 10px",
+    accentColor: "green"
+  },
   onload: {
     open: true,
     chat: {

@@ -84,7 +84,7 @@ export default class Sweetbot extends Component {
         if (data.message && data.meta) {
           this._recordChat({
             sender: "SWEETBOT",
-            chat: data //{ message: "hi", meta: {} }
+            chat: data
           });
         } else {
           this._recordChat({
@@ -134,6 +134,8 @@ export default class Sweetbot extends Component {
       STYLES[`--${style}`] = this.customprops.styles[style];
     }
 
+    const HEADER = <div />;
+
     const MESSAGES = this.state.messages.map((message, index) => (
       <Message
         key={`message-${index}-${message.sender}`}
@@ -171,6 +173,7 @@ export default class Sweetbot extends Component {
         name={`${this.customprops.name} chatbot`}
         onChange={this._changeCurrentMessage}
       >
+        {HEADER}
         {MESSAGES}
         {INPUT}
       </div>
