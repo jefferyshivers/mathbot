@@ -5,7 +5,8 @@
   "main": "lol",
   "scripts": {
     "test": "karma start karma.conf.js",
-    "test:once": "karma start karma.conf.js --single-run"
+    "test:once": "karma start karma.conf.js --single-run",
+    "build": "rm -rf build && mkdir build && ./node_modules/.bin/webpack"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "sass-loader": "^6.0.7",
     "sinon": "^4.4.5",
     "style-loader": "^0.20.3",
-    "webpack": "^4.1.1"
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12"
   }
 }

@@ -61,7 +61,7 @@ export default class Sweetbot extends Component {
     // load default message. default = none
     this.customprops.onload.chat &&
       this._recordChat({
-        sender: "BOT",
+        sender: "SWEETBOT",
         chat: this.customprops.onload.chat
       });
   }
@@ -78,8 +78,25 @@ export default class Sweetbot extends Component {
     let post = API.chat({
       base,
       path,
-      callback: data =>
-        this._recordChat({ sender: "BOT", chat: { message: "hi", meta: {} } })
+      callback: data => {
+        this._recordChat({ sender: "HUMAN", chat: this.state.current });
+
+        if (data.message && data.meta) {
+          this._recordChat({
+            sender: "SWEETBOT",
+            chat: data //{ message: "hi", meta: {} }
+          });
+        } else {
+          this._recordChat({
+            sender: "SWEETBOT",
+            chat: {
+              meta: {},
+              message:
+                "Sorry, I'm experiencing some technical difficulties so I wasn't able to form a response for you. :("
+            }
+          });
+        }
+      }
     });
 
     return post(this.state.current);
@@ -88,6 +105,8 @@ export default class Sweetbot extends Component {
   _recordChat({ sender, chat }) {
     const timestamp = new Date().toLocaleTimeString();
     const message = { timestamp, sender, chat, adding: true };
+
+    const { message: messageBody = "", meta = {} } = chat;
 
     this.setState(
       {

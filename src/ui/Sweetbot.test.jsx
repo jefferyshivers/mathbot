@@ -90,7 +90,7 @@ describe("Sweetbot", () => {
     it("records a message", () => {
       let wrapper = shallow(<Sweetbot auto={false} />);
       let message = {
-        sender: "BOT",
+        sender: "ROBOT",
         chat: {
           message: "test",
           meta: {}
@@ -100,7 +100,7 @@ describe("Sweetbot", () => {
       expect(wrapper.state().messages.length).to.equal(0);
       wrapper.instance()._recordChat(message);
       expect(wrapper.state().messages.length).to.equal(1);
-      expect(wrapper.state().messages[0].sender).to.equal("BOT");
+      expect(wrapper.state().messages[0].sender).to.equal("ROBOT");
       expect(wrapper.state().messages[0].chat).to.deep.equal(message.chat);
     });
 
@@ -120,7 +120,7 @@ describe("Sweetbot", () => {
       );
 
       expect(wrapper.state().messages.length).to.equal(1);
-      expect(wrapper.state().messages[0].sender).to.equal("BOT");
+      expect(wrapper.state().messages[0].sender).to.equal("SWEETBOT");
       expect(wrapper.state().messages[0].chat).to.deep.equal(
         customprops.onload.chat
       );
@@ -199,7 +199,7 @@ describe("Sweetbot", () => {
           .instance()
           ._postChat()
           .then(() => {
-            expect(wrapper.state().messages.length).to.equal(1);
+            expect(wrapper.state().messages.length).to.equal(2);
           });
       });
     });

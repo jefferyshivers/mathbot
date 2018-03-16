@@ -2,6 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
+  mode: process.env.NODE_ENV || "production",
+
   // entry: { sweetbot: "./src/index.js", "sweetbot.min": "./src/index.js" },
   entry: { somebot: "./src/index.jsx" },
 
@@ -40,15 +42,18 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      // include: /\.min\.js$/,
-      include: /\.js$/,
-      minimize: true,
-      mangle: true
-    }),
-    new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("production")
-    })
-  ]
+  optimization: {
+    minimize: true
+  }
+  // plugins: [
+  // new config.optimization.minimize({
+  // include: /\.min\.js$/,
+  // include: /\.js$/
+  // minimize: true,
+  // mangle: true
+  // })
+  // new webpack.DefinePlugin({
+  //   "process.env.NODE_ENV": JSON.stringify("production")
+  // })
+  // ]
 };
