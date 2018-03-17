@@ -7,8 +7,9 @@
     "test": "karma start karma.conf.js",
     "test:once": "karma start karma.conf.js --single-run",
     "build": "rm -rf build && mkdir build && ./node_modules/.bin/webpack",
-    "docs": "node docs",
-    "start": "node ./docs/server/server.js"
+    "postinstall": "cd docs && npm install && cd .. && npm run build",
+    "start": "node ./docs/server/server.js",
+    "docs": "node docs"
   },
   "repository": {
     "type": "git",
