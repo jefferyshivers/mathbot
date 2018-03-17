@@ -2,12 +2,13 @@
   "name": "sweetbot",
   "version": "0.0.1",
   "description": "a sweeter chatbot library",
-  "main": "lol",
+  "main": "./docs/server/server.js",
   "scripts": {
     "test": "karma start karma.conf.js",
     "test:once": "karma start karma.conf.js --single-run",
     "build": "rm -rf build && mkdir build && ./node_modules/.bin/webpack",
-    "docs": "node docs"
+    "docs": "node docs",
+    "start": "node ./docs/server/server.js"
   },
   "repository": {
     "type": "git",
