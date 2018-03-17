@@ -45,7 +45,6 @@
     "karma-enzyme-react-16": "^0.0.1",
     "karma-mocha": "^1.3.0",
     "karma-webpack": "^2.0.13",
-    "merge-deep": "^3.0.1",
     "mocha": "^5.0.4",
     "node-sass": "^4.7.2",
     "react": "^16.2.0",
