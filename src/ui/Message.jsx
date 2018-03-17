@@ -24,7 +24,13 @@
 import React, { Component } from "react";
 
 const Message = props => {
-  return <div className="Message" />;
+  return (
+    <div className="Message">
+      <div className={props.messageprops.sender}>
+        {props.messageprops.chat.message}
+      </div>
+    </div>
+  );
 };
 
 export default Message;

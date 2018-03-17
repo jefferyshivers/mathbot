@@ -31,11 +31,13 @@ export default class Sweetbot extends Component {
   constructor(props) {
     super(props);
     this._changeCurrentMessage = this._changeCurrentMessage.bind(this);
+    this._inputKeyPress = this._inputKeyPress.bind(this);
     this._postChat = this._postChat.bind(this);
     this._recordChat = this._recordChat.bind(this);
   }
 
   state = {
+    waiting: false,
     // if chat window is visible or collapsed
     open: false,
     current: {
@@ -48,6 +50,7 @@ export default class Sweetbot extends Component {
     messages: []
   };
 
+  // TODO change this to use assign-deep?
   customprops = Object.assign(
     {},
     defaultprops(this.props.auto),
@@ -68,24 +71,41 @@ export default class Sweetbot extends Component {
 
   _changeCurrentMessage(e) {
     this.setState({
-      current: { meta: this.state.current.meta, message: e.target.value }
+      current: Object.assign(this.state.current, { message: e.target.value })
     });
+  }
+
+  _inputKeyPress(k) {
+    this.state.open &&
+      k.key === "Enter" &&
+      this.state.current.message !== "" &&
+      this._postChat().then(() => {
+        this.setState({
+          current: Object.assign(this.state.current, { message: "" })
+        });
+      });
   }
 
   _postChat() {
     const { base, path } = this.customprops.endpoint;
-    this._recordChat({ sender: "HUMAN", chat: this.state.current });
+    this._recordChat({
+      sender: "HUMAN",
+      chat: Object.assign({}, this.state.current)
+    });
+    this.setState({ waiting: true });
 
     let post = API.chat({
       base,
       path,
       callback: data => {
         if (data.message && data.meta) {
+          this.setState({ waiting: false });
           this._recordChat({
             sender: "SWEETBOT",
             chat: data
           });
         } else {
+          this.setState({ waiting: false });
           this._recordChat({
             sender: "SWEETBOT",
             chat: {
@@ -103,27 +123,14 @@ export default class Sweetbot extends Component {
 
   _recordChat({ sender, chat }) {
     const timestamp = new Date().toLocaleTimeString();
-    const message = { timestamp, sender, chat, adding: true };
+    const message = { timestamp, sender, chat };
 
     const { message: messageBody = "", meta = {} } = chat;
 
-    this.setState(
-      {
-        messages: [...this.state.messages, message],
-        current: Object.assign(this.state.current, { meta: chat.meta })
-      },
-      () =>
-        // we do this to animated the new message.
-        // with a transition set, the message is first rendered with the new (adding) css,
-        // then on the next tick that css is updated to create the animation
-        process.nextTick(() => {
-          this.setState({
-            messages: this.state.messages.map(message =>
-              Object.assign(message, { adding: false })
-            )
-          });
-        })
-    );
+    this.setState({
+      messages: [...this.state.messages, message],
+      current: Object.assign(this.state.current, { meta: chat.meta })
+    });
   }
 
   render() {
@@ -134,21 +141,23 @@ export default class Sweetbot extends Component {
     }
 
     const HEADER = (
-      <div>
+      <div onClick={() => !this.state.open && this.setState({ open: true })}>
         <div>{this.customprops.name}</div>
-        <div>-</div>
+        <div onClick={() => this.setState({ open: false })}>-</div>
         <div>x</div>
       </div>
     );
 
     const MESSAGES = (
       <div>
-        {this.state.messages.map((message, index) => (
-          <Message
-            key={`message-${index}-${message.sender}`}
-            messageprops={message}
-          />
-        ))}
+        <div>
+          {this.state.messages.map((message, index) => (
+            <Message
+              key={`message-${index}-${message.sender}`}
+              messageprops={message}
+            />
+          ))}
+        </div>
       </div>
     );
 
@@ -172,6 +181,8 @@ export default class Sweetbot extends Component {
             <input
               name="text input field"
               value={this.state.current.message}
+              onChange={this._changeCurrentMessage}
+              onKeyPress={this._inputKeyPress}
               disabled={this.state.current.meta.inputDisabled ? true : false}
             />
           </div>
@@ -182,7 +193,7 @@ export default class Sweetbot extends Component {
 
     return (
       <div
-        className="Sweetbot"
+        className={`Sweetbot${this.state.open ? "" : " collapsed"}`}
         style={STYLES}
         name={`${this.customprops.name} chatbot`}
         onChange={this._changeCurrentMessage}

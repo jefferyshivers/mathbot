@@ -60,6 +60,7 @@ describe("Sweetbot", () => {
     let wrapper = shallow(<Sweetbot auto={false} />);
 
     expect(wrapper.state()).to.deep.equal({
+      waiting: false,
       open: false,
       current: {
         meta: {},
