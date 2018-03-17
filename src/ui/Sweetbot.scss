@@ -117,7 +117,7 @@
           color: var(--sb-accentColor);
           display: flex; justify-content: center; align-items: center;
           transform: scale(1);
-          transition: transform 0.5s;
+          transition: transform 0.6s;
         }
       }
     }
@@ -141,9 +141,18 @@
           width: 100%;
           padding: 10px;
           display: flex;
-          animation-name: addmessage;
-          animation-iteration-count: 1;
-          animation-duration: 1s;
+
+          &.SWEETBOT {
+            animation-name: addmessage;
+            animation-iteration-count: 1;
+            animation-duration: 1s;
+          }
+
+          &.HUMAN {
+            > div {
+              margin-left: auto;
+            }
+          }
 
           > div {
             width: 100%;
@@ -154,14 +163,6 @@
             background: white;
             border: 1px solid rgba(40,40,40,.1);
             border-radius: 6px;
-
-            &.SWEETBOT {
-
-            }
-
-            &.HUMAN {
-              margin-left: auto;
-            }
           }
         }
       }

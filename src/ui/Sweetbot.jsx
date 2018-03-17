@@ -51,6 +51,7 @@ export default class Sweetbot extends Component {
   };
 
   // TODO change this to use assign-deep?
+  // FOR NOW no, require the user to reassign anything deeper than the first level of properties
   customprops = Object.assign(
     {},
     defaultprops(this.props.auto),
@@ -110,8 +111,7 @@ export default class Sweetbot extends Component {
             sender: "SWEETBOT",
             chat: {
               meta: {},
-              message:
-                "Sorry, I'm experiencing some technical difficulties so I wasn't able to form a response for you. :("
+              message: this.customprops.endpoint.failureResponse
             }
           });
         }

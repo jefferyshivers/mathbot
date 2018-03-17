@@ -34,8 +34,9 @@ const defaults = {
     open: false
   },
   endpoint: {
-    base: "base.com",
-    path: "path"
+    path: "chat",
+    failureResponse:
+      "Sorry, I'm experiencing some technical difficulties so I wasn't able to form a response for you. :("
   }
 };
 

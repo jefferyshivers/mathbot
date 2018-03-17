@@ -12,5 +12,9 @@
       "../common/mixins",
       "./mixins"
     ]
+  },
+  "chat": {
+    "dataSource": null,
+    "public": true
   }
 }

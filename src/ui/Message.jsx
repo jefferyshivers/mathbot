@@ -25,10 +25,8 @@ import React, { Component } from "react";
 
 const Message = props => {
   return (
-    <div className="Message">
-      <div className={props.messageprops.sender}>
-        {props.messageprops.chat.message}
-      </div>
+    <div className={`Message ${props.messageprops.sender}`}>
+      <div>{props.messageprops.chat.message}</div>
     </div>
   );
 };
