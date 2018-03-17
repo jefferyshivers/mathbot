@@ -24,9 +24,15 @@
   --sb-shape: var(--shape, --default-shape);
 
   * {
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    box-sizing: border-box;
+    // hardware acceleration
+    -webkit-transform: translateZ(0);
   }
 
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   font-family: Geneva, Tahoma, sans-serif;
   font-size: 12pt;
@@ -55,6 +61,7 @@
 
         > div {
           &:not(:first-of-type) {
+            transition: transform 0.2s;
             transform: scale(0);
           }
         }
@@ -65,7 +72,6 @@
   > div {
     position: relative;
     width: 100%;
-    box-sizing: border-box;
 
     &:nth-of-type(1) {
       // header
@@ -83,7 +89,6 @@
       > div {
         position: relative;
         height: 100%;
-        box-sizing: border-box;
 
         &:nth-of-type(1) {
           // title
@@ -92,31 +97,25 @@
           justify-content: flex-start;
           align-items: center;
         }
-        &:nth-of-type(2) {
-          // minimize
+        &:nth-of-type(2), &:nth-of-type(3) {
           width: 30px; min-width: 30px; max-width: 30px;
           height: 30px; min-height: 30px; max-height: 30px;
           border-radius: 50%;
-          margin-right: 10px;
           border: 1px solid white;
           cursor: pointer;
-          background: rgb(255, 255, 163);
           color: var(--accentColor);
           display: flex; justify-content: center; align-items: center;
           transform: scale(1);
-          transition: scale 0.3s;
+        }
+        &:nth-of-type(2) {
+          // minimize
+          background: rgb(255, 255, 163);
+          margin-right: 10px;
+          transition: transform 0.3s;
         }
         &:nth-of-type(3) {
           // close: minimize and erase
-          width: 30px; min-width: 30px; max-width: 30px;
-          height: 30px; min-height: 30px; max-height: 30px;
-          border-radius: 50%;
-          border: 1px solid white;
-          cursor: pointer;
           background: rgb(255, 176, 176);
-          color: var(--sb-accentColor);
-          display: flex; justify-content: center; align-items: center;
-          transform: scale(1);
           transition: transform 0.6s;
         }
       }
@@ -136,7 +135,6 @@
         overflow-y: auto;
 
         > .Message {
-          box-sizing: border-box;
           position: relative;
           width: 100%;
           padding: 10px;
@@ -158,7 +156,6 @@
             width: 100%;
             max-width: 250px;
             display: inline-block;
-            box-sizing: border-box;
             padding: 10px;
             background: white;
             border: 1px solid rgba(40,40,40,.1);
@@ -169,12 +166,40 @@
     }
     &:nth-of-type(3) {
       // input
-      height: 60px;
-      min-height: 60px;
-      max-height: 60px;
+      height: 60px; min-height: 60px; max-height: 60px;
       display: flex;
       flex-direction: column;
       background: white;
+      width: 100%;
+
+      &.has-options {
+        height: 110px; min-height: 110px; max-height: 110px;
+
+        > div {
+          &:first-of-type {
+            height: 50px; min-height: 50px; max-height: 50px;
+            padding: 7.5px 5px;
+
+            &:before, &:after {
+              content: '';
+              position: absolute;
+              top: 2.5px;
+              height: calc(100% - 5px);
+              width: 7.5px;
+
+              z-index: 10;
+            }
+            &:before {
+              left: 5px;
+              background: linear-gradient(to right, rgba(90, 90, 90, 0.247), rgba(255,255,255,0), rgba(255,255,255,0));
+            }
+            &:after {
+              right: 5px;
+              background: linear-gradient(to left, rgba(90, 90, 90, 0.247), rgba(255,255,255,0), rgba(255,255,255,0));
+            }
+          }
+        }
+      }
 
       > div {
         position: relative;
@@ -182,14 +207,56 @@
 
         &:first-of-type {
           // options
-          // width: 100%;
+          height: 0; min-height: 0; max-height: 0;
+          width: 100%; min-width: 100%; max-width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+
+          > div {
+            position: relative;
+            width: auto;
+            height: 100%;
+            overflow-x: auto;
+            padding: 0 7.5px;
+            display: flex;
+            align-items: center;
+
+            > div {
+              position: relative;
+              display: inline-block;
+              font-size: 0.8em;
+              height: 30px;
+              padding: 5px 10px;
+              border-radius: 15px;
+              border: 1px solid var(--sb-accentColor);
+              cursor: pointer;
+              box-sizing: border-box;
+
+              &.selected {
+                background: rgb(238, 244, 255) !important;
+              }
+
+              &:first-of-type {
+                margin-right: 5px;
+              }
+              &:last-of-type {
+                margin-left: 5px;
+              }
+              &:not(:first-of-type):not(:last-of-type) {
+                margin: auto 5px;
+              }
+
+              &:hover {
+                background: rgb(250, 250, 250);
+              }
+            }
+          }
         }
         &:last-of-type {
           // input
           display: flex;
           flex-direction: row;
-          // for now, make ths 100%
-          height: 100%;
+          height: 60px; min-height: 60px; max-height: 60px;
 
           > div {
             position: relative;
@@ -204,17 +271,19 @@
               > input {
                 font-size: 16px;
                 position: relative;
-                background: rgb(250, 250, 255);
                 outline: none;
                 border: none;
                 border-radius: 0;
                 width: 90%;
                 height: 2em;
                 overflow: visible;
-                box-sizing: border-box;
                 padding: 8px;
+                color: rgb(51, 51, 51);
+                background: rgb(250, 250, 255);
+                box-shadow: 0 1px 0 0 rgb(230, 230, 230);
 
                 &:focus {
+                  color: black;
                   background: white;
                   box-shadow: 0 1px 0 0 var(--sb-accentColor);
                 }

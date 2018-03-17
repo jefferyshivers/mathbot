@@ -34,6 +34,7 @@ export default class Sweetbot extends Component {
     this._inputKeyPress = this._inputKeyPress.bind(this);
     this._postChat = this._postChat.bind(this);
     this._recordChat = this._recordChat.bind(this);
+    this._selectOption = this._selectOption.bind(this);
   }
 
   state = {
@@ -133,6 +134,14 @@ export default class Sweetbot extends Component {
     });
   }
 
+  _selectOption(i) {
+    this.setState({
+      current: Object.assign(this.state.current, {
+        message: this.state.current.meta.options[i]
+      })
+    });
+  }
+
   render() {
     const STYLES = {};
 
@@ -161,7 +170,32 @@ export default class Sweetbot extends Component {
       </div>
     );
 
-    const OPTIONS = <div />;
+    const has_options =
+      this.state.current.meta.options &&
+      this.state.current.meta.options.length > 0;
+
+    const OPTIONS = (
+      <div className="Options">
+        <div>
+          {has_options &&
+            this.state.current.meta.options.map((option, index) => {
+              return (
+                <div
+                  className={
+                    this.state.current.message === option ? "selected" : ""
+                  }
+                  key={`sweetbot-option-${index}`}
+                  onClick={() => {
+                    this._selectOption(index);
+                  }}
+                >
+                  {option}
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    );
     // TODO handle selectable, multi-selectable, selected
     // this.state.current.meta.select && this.state.current.meta.select.options
     //   ? this.state.current.meta.select.options.map(option => {
@@ -172,6 +206,7 @@ export default class Sweetbot extends Component {
     // TODO if meta.inputDisabled, don't remove it from DOM, but make it not-focusable
     const INPUT = (
       <div
+        className={has_options ? "has-options" : ""}
         name={`${this.customprops.name} chatbot input`}
         meta={this.state.current.meta}
       >
