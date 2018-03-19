@@ -11,12 +11,22 @@
 
   <script src="./Sweetbot.js"></script>
   <script>
+    function randomRGB(min,max) {
+      return (Math.floor(Math.random() * (max - min))) + min;
+    }
+
     Sweetbot.create({
+      name: 'sweetbot',
       botSelector: 'sweetbot',
       minimumDelay: 2000,
+      styles: {
+        accentColor: `rgb(${randomRGB(50,100)},${randomRGB(120,200)},${randomRGB(200,255)})`,
+        headerColor: 'white'
+      },
       onload: {
+        open: true,
         chat: {
-          message: "hi.",
+          message: "Hey! Welcome to sweetbot, a super friendly, minimal configuration frontend library for chatbots. Which of the following describes you best?",
           meta: {
             options: ['Just browsing', 'Prospective user', 'Already using sweetbot'],
             inputDisabled: true

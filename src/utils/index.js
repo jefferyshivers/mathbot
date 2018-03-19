@@ -84,10 +84,15 @@ const chat = ({ base, path, delay: min_delay = 0, callback }) => ({
   )
     throw Error("Invalid properties given in chat invocation");
 
-  const endpoint = composeEndpoint({ base, path });
-
   if (callback) {
-    return fetch(endpoint, { method: "POST" })
+    const endpoint = composeEndpoint({ base, path });
+    const body = JSON.stringify({ message: message, meta: meta });
+
+    return fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: body
+    })
       .then(res => res.json())
       .then(data => callback(data));
   }

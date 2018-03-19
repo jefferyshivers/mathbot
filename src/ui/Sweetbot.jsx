@@ -120,7 +120,7 @@ export default class Sweetbot extends Component {
                 message: this.customprops.endpoint.failureResponse
               };
 
-        let minimumDelay =
+        const minimumDelay =
           typeof this.customprops.minimumDelay === "number"
             ? this.customprops.minimumDelay
             : 0;

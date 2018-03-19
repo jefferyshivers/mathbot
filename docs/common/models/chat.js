@@ -1,16 +1,31 @@
 "use strict";
 
 module.exports = Chat => {
-  Chat.message = (sessionkey, message, meta, cb) => {
-    cb(null, "...", "test...", {});
+  const responses = {
+    "Just browsing": {
+      message: "Cool, have fun!",
+      meta: {}
+    },
+    "Prospective user": {
+      message: "Awesome, thanks for checking this out then!",
+      meta: {}
+    },
+    "Already using sweetbot": {
+      message: "Sweet - having fun?",
+      meta: {}
+    }
+  };
+
+  Chat.message = (message, meta, cb) => {
+    const response = responses[message]
+      ? responses[message]
+      : { message: "Oops something went wrong", meta: {} };
+
+    cb(null, response.message, response.meta);
   };
 
   Chat.remoteMethod("message", {
     accepts: [
-      {
-        arg: "sessionkey",
-        type: "string"
-      },
       {
         arg: "message",
         type: "string"
@@ -21,10 +36,6 @@ module.exports = Chat => {
       }
     ],
     returns: [
-      {
-        arg: "sessionkey",
-        type: "string"
-      },
       {
         arg: "message",
         type: "string"
