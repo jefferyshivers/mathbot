@@ -44,6 +44,7 @@ export default class Sweetbot extends Component {
     this._recordChat = this._recordChat.bind(this);
     this._selectOption = this._selectOption.bind(this);
     this._sendIfValid = this._sendIfValid.bind(this);
+    this._open = this._open.bind(this);
   }
 
   state = {
@@ -76,7 +77,9 @@ export default class Sweetbot extends Component {
     this.customprops.onload.chat &&
       this._recordChat({
         sender: "SWEETBOT",
-        chat: this.customprops.onload.chat
+        chat: Object.assign(this.customprops.onload.chat, {
+          read: this.state.open
+        })
       });
   }
 
@@ -102,23 +105,27 @@ export default class Sweetbot extends Component {
 
   _postChat() {
     const { base, path } = this.customprops.endpoint;
+
     this._recordChat({
       sender: "HUMAN",
-      chat: Object.assign({}, this.state.current)
+      chat: Object.assign({}, this.state.current, { read: true })
     });
+
     this.setState({ waiting: true });
 
     let post = API.chat({
       base,
       path,
       callback: data => {
-        const chat =
+        let chat =
           data.message && data.meta
             ? data
             : {
                 meta: {},
                 message: this.customprops.endpoint.failureResponse
               };
+
+        // chat.read = this.state.open ? true : false;
 
         const minimumDelay =
           typeof this.customprops.minimumDelay === "number"
@@ -129,10 +136,14 @@ export default class Sweetbot extends Component {
           setTimeout(() => {
             this.setState({ waiting: false });
             this._recordChat({ sender: "SWEETBOT", chat: chat });
+            this.customprops.endpoint =
+              chat.meta.endpoint || this.customprops.endpoint;
           }, minimumDelay);
         } else {
           this.setState({ waiting: false });
           this._recordChat({ sender: "SWEETBOT", chat: chat });
+          this.customprops.endpoint =
+            chat.meta.endpoint || this.customprops.endpoint;
         }
       }
     });
@@ -142,8 +153,12 @@ export default class Sweetbot extends Component {
 
   _recordChat({ sender, chat }) {
     const timestamp = new Date().toLocaleTimeString();
-    const message = { timestamp, sender, chat };
-    const { message: messageBody = "", meta = {} } = chat;
+    const message = {
+      timestamp,
+      sender,
+      chat: Object.assign(chat, { read: this.state.open })
+    };
+    // const { message: messageBody = "", meta = {} } = chat;
 
     this.setState({
       messages: [...this.state.messages, message],
@@ -159,6 +174,16 @@ export default class Sweetbot extends Component {
     });
   }
 
+  _open() {
+    this.setState({ open: true });
+    this.setState({
+      messages: this.state.messages.map(message => {
+        message.chat.read = true;
+        return message;
+      })
+    });
+  }
+
   render() {
     const STYLES = {};
 
@@ -166,8 +191,22 @@ export default class Sweetbot extends Component {
       STYLES[`--${style}`] = this.customprops.styles[style];
     }
 
+    const unread_messages = this.state.messages.filter(
+      message => !message.chat.read
+    );
+
+    const UNREAD =
+      unread_messages.length > 0 && !this.state.open ? (
+        <div
+          className="Unread"
+          onClick={() => !this.state.open && this._open()}
+        >
+          {unread_messages.length}
+        </div>
+      ) : null;
+
     const HEADER = (
-      <div onClick={() => !this.state.open && this.setState({ open: true })}>
+      <div onClick={() => !this.state.open && this._open()}>
         <div>{this.customprops.name}</div>
         <div onClick={() => this.setState({ open: false })}>-</div>
         <div>x</div>
@@ -257,6 +296,7 @@ export default class Sweetbot extends Component {
         {HEADER}
         {MESSAGES}
         {INPUT}
+        {UNREAD}
       </div>
     );
   }

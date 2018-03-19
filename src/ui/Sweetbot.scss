@@ -24,6 +24,10 @@
   --headerColor: rgb(236, 236, 236);
   --sb-headerColor: var(--headerColor, --default-headerColor);
 
+  --default-sendButtonColor: cyan;
+  --sendButtonColor: cyan;
+  --sb-sendButtonColor: var(--sendButtonColor, --default-sendButtonColor);
+
   // shapes
   --default-shape: 25px 25px 10px 10px;
   --shape: 25px 25px 10px 10px;
@@ -396,7 +400,7 @@
                   transition: transform .2s, filter .2s, -webkit-filter .2s;
 
                   > path {
-                    fill: rgb(58, 58, 58);
+                    fill: var(--sb-sendButtonColor);
                   }
                 }
               }
@@ -404,6 +408,20 @@
           }
         }
       }
+    }
+    &.Unread {
+      position: absolute;
+      width: 23px;
+      height: 23px;
+      box-sizing: border-box;
+      top: 4px;
+      left: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-shadow: 0 0 4px black;
+      cursor: pointer;
     }
   }
 }

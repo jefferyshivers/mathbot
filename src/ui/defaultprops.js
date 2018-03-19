@@ -29,7 +29,8 @@ const defaults = {
     shape: "6px",
     collapsedShape: "25px",
     accentColor: "rgb(0,100,155)",
-    headerColor: "white"
+    headerColor: "white",
+    sendButtonColor: "rgb(0,100,155)"
   },
   onload: {
     open: false

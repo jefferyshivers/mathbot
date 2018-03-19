@@ -4,7 +4,13 @@ module.exports = Chat => {
   const responses = {
     "Just browsing": {
       message: "Cool, have fun!",
-      meta: {}
+      meta: {
+        endpoint: {
+          path: "chats/message/browsing",
+          failureResponse:
+            "Sorry, I don't have much else to say yet - I'm still being setup!"
+        }
+      }
     },
     "Prospective user": {
       message: "Awesome, thanks for checking this out then!",

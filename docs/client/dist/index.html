@@ -15,16 +15,19 @@
       return (Math.floor(Math.random() * (max - min))) + min;
     }
 
+    const customColor = `rgb(${randomRGB(50,100)},${randomRGB(120,200)},${randomRGB(200,255)})`;
+
     Sweetbot.create({
       name: 'sweetbot',
       botSelector: 'sweetbot',
       minimumDelay: 2000,
       styles: {
-        accentColor: `rgb(${randomRGB(50,100)},${randomRGB(120,200)},${randomRGB(200,255)})`,
-        headerColor: 'white'
+        accentColor: customColor,
+        headerColor: 'white',
+        sendButtonColor: customColor
       },
       onload: {
-        open: true,
+        open: false,
         chat: {
           message: "Hey! Welcome to sweetbot, a super friendly, minimal configuration frontend library for chatbots. Which of the following describes you best?",
           meta: {
