@@ -42,7 +42,8 @@
   },
   "files": {
     "loopback#static": {
-      "params": "$!../client/dist"
+        "paths": ["/"],
+        "params": "$!../client/dist"
     }
   },
   "final": {

@@ -59,7 +59,7 @@ const isValid = ({ test, type, choices, invalid }) =>
 
 const areValid = validations => validations.every(isValid);
 
-const chat = ({ base, path, callback }) => ({
+const chat = ({ base, path, delay: min_delay = 0, callback }) => ({
   type,
   meta = {},
   message = ""

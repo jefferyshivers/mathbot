@@ -26,6 +26,14 @@ import defaultprops from "./defaultprops.js";
 import * as API from "../utils";
 import "./Sweetbot.scss";
 import Message from "./Message.jsx";
+// import SVG_SEND from "./send.svg";
+const delay = require("delay");
+
+const SVG_SEND = (
+  <svg viewBox="0 0 100 80">
+    <path d="M0,0 L97.5,35 a20,10 0 0 1 0,10 L0,80 L0,45 L60,40 L0,35 Z" />
+  </svg>
+);
 
 export default class Sweetbot extends Component {
   constructor(props) {
@@ -35,6 +43,7 @@ export default class Sweetbot extends Component {
     this._postChat = this._postChat.bind(this);
     this._recordChat = this._recordChat.bind(this);
     this._selectOption = this._selectOption.bind(this);
+    this._sendIfValid = this._sendIfValid.bind(this);
   }
 
   state = {
@@ -78,8 +87,11 @@ export default class Sweetbot extends Component {
   }
 
   _inputKeyPress(k) {
+    k.key === "Enter" && this._sendIfValid();
+  }
+
+  _sendIfValid() {
     this.state.open &&
-      k.key === "Enter" &&
       this.state.current.message !== "" &&
       this._postChat().then(() => {
         this.setState({
@@ -100,21 +112,27 @@ export default class Sweetbot extends Component {
       base,
       path,
       callback: data => {
-        if (data.message && data.meta) {
-          this.setState({ waiting: false });
-          this._recordChat({
-            sender: "SWEETBOT",
-            chat: data
-          });
+        const chat =
+          data.message && data.meta
+            ? data
+            : {
+                meta: {},
+                message: this.customprops.endpoint.failureResponse
+              };
+
+        let minimumDelay =
+          typeof this.customprops.minimumDelay === "number"
+            ? this.customprops.minimumDelay
+            : 0;
+
+        if (minimumDelay) {
+          setTimeout(() => {
+            this.setState({ waiting: false });
+            this._recordChat({ sender: "SWEETBOT", chat: chat });
+          }, minimumDelay);
         } else {
           this.setState({ waiting: false });
-          this._recordChat({
-            sender: "SWEETBOT",
-            chat: {
-              meta: {},
-              message: this.customprops.endpoint.failureResponse
-            }
-          });
+          this._recordChat({ sender: "SWEETBOT", chat: chat });
         }
       }
     });
@@ -125,7 +143,6 @@ export default class Sweetbot extends Component {
   _recordChat({ sender, chat }) {
     const timestamp = new Date().toLocaleTimeString();
     const message = { timestamp, sender, chat };
-
     const { message: messageBody = "", meta = {} } = chat;
 
     this.setState({
@@ -166,6 +183,15 @@ export default class Sweetbot extends Component {
               messageprops={message}
             />
           ))}
+          {this.state.waiting ? (
+            <div className="Message WAITING">
+              <div>
+                <div />
+                <div />
+                <div />
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     );
@@ -221,7 +247,9 @@ export default class Sweetbot extends Component {
               disabled={this.state.current.meta.inputDisabled ? true : false}
             />
           </div>
-          <div>>>></div>
+          <div>
+            <button onClick={this._sendIfValid}>{SVG_SEND}</button>
+          </div>
         </div>
       </div>
     );

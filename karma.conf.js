@@ -96,6 +96,21 @@ module.exports = function(config) {
                 loader: "sass-loader"
               }
             ]
+          },
+          {
+            test: /\.(svg|png|jpg|gif)$/,
+            use: [
+              {
+                loader: "file-loader",
+                options: {}
+              }
+              // {
+              //   loader: 'image-webpack-loader',
+              //   options: {
+              //     bypassOnDebug: true,
+              //   },
+              // }
+            ]
           }
         ]
       },

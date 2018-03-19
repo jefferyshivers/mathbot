@@ -21,7 +21,7 @@
   "author": "Jeffery Shivers",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fizzlestudio/sweetbot/issues"
+    "url": "https://github.com/jefferyshivers/sweetbot/issues"
   },
   "homepage": "https://github.com/jefferyshivers/sweetbot#readme",
   "devDependencies": {
@@ -37,8 +37,10 @@
     "chai-enzyme": "^1.0.0-beta",
     "cheerio": "^1.0.0-rc.2",
     "css-loader": "^0.28.10",
+    "delay": "^2.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "file-loader": "^1.1.11",
     "karma": "^2.0.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
