@@ -7,9 +7,23 @@
   <title>sweetbot docs</title>
 </head>
 <body>
+  <sweetbot />
+
   <script src="./Sweetbot.js"></script>
   <script>
-    Sweetbot.create()
+    Sweetbot.create({
+      botSelector: 'sweetbot',
+      minimumDelay: 2000,
+      onload: {
+        chat: {
+          message: "hi.",
+          meta: {
+            options: ['Just browsing', 'Prospective user', 'Already using sweetbot'],
+            inputDisabled: true
+          }
+        }
+      }
+    })
   </script>
 </body>
 </html>

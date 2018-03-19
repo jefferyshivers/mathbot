@@ -28,6 +28,9 @@
   --default-shape: 25px 25px 10px 10px;
   --shape: 25px 25px 10px 10px;
   --sb-shape: var(--shape, --default-shape);
+  --default-collapsedShape: 25px;
+  --collapsedShape: 25px;
+  --sb-collapsedShape: var(--collapsedShape, --default-collapsedShape);
 
   * {
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -53,13 +56,18 @@
   height: calc(100vh - 40px);
   max-height: 500px;
   background-color: white;
-  box-shadow: 0 0 20px rgba(40,40,40,.4);
+  box-shadow: 0 0 10px rgba(20,20,20,.5);
   box-sizing: border-box;
-  transition: height 0.4s, border-radius 0.3s;
+  transition: height 0.4s, width 0.4s, border-radius 0.3s, box-shadow 0.2s;
 
   &.collapsed {
     height: 50px;
-    border-radius: 25px;
+    width: 50px;
+    border-radius: var(--sb-collapsedShape);
+
+    &:hover {
+      box-shadow: 0 0 24px rgba(20,20,20,.4);
+    }
 
     > div {
       &:first-of-type {
@@ -67,6 +75,10 @@
         cursor: pointer;
 
         > div {
+          &:first-of-type {
+            opacity: 0;
+          }
+
           &:not(:first-of-type) {
             transition: transform 0.2s;
             transform: scale(0);
@@ -103,6 +115,8 @@
           display: flex;
           justify-content: flex-start;
           align-items: center;
+          opacity: 1;
+          transition: opacity 0.4s;
         }
         &:nth-of-type(2), &:nth-of-type(3) {
           width: 30px; min-width: 30px; max-width: 30px;
@@ -242,7 +256,7 @@
               position: absolute;
               top: 2.5px;
               height: calc(100% - 5px);
-              width: 7.5px;
+              width: 2.5px;
 
               z-index: 10;
             }
@@ -285,12 +299,17 @@
               height: 30px;
               padding: 5px 10px;
               border-radius: 15px;
-              border: 1px solid var(--sb-accentColor);
+              border: 1px solid rgb(224, 224, 224);
               cursor: pointer;
               box-sizing: border-box;
+              background: white;
 
               &.selected {
-                background: rgb(238, 244, 255) !important;
+                border: 1px solid var(--sb-accentColor);
+
+                &:hover {
+                  background: white;
+                }
               }
 
               &:first-of-type {
@@ -365,8 +384,8 @@
                 &:hover {
                   > svg {
                     transform: scale(1.05);
-                    -webkit-filter: drop-shadow( 0 0 6px rgba(20,20,20,.1) );
-                    filter: drop-shadow( 0 0 6px rgba(20,20,20,.1) );
+                    -webkit-filter: drop-shadow( 0 0 6px rgba(39, 39, 39, 0.1) );
+                    filter: drop-shadow( 0 0 6px rgba(39, 39, 39, 0.1) );
                   }
                 }
 

@@ -26,7 +26,8 @@ const assign = require("assign-deep");
 const defaults = {
   name: "sweetbot",
   styles: {
-    shape: "3px",
+    shape: "6px",
+    collapsedShape: "25px",
     accentColor: "rgb(0,100,155)",
     headerColor: "white"
   },
@@ -42,7 +43,8 @@ const defaults = {
 
 const auto = {
   styles: {
-    shape: "25px 25px 10px 10px"
+    shape: "25px 25px 10px 10px",
+    collapsedShape: "25px"
   },
   onload: {
     open: true,
@@ -51,7 +53,7 @@ const auto = {
       meta: {}
     }
   },
-  minimumDelay: 3100
+  minimumDelay: 1500
 };
 
 /**

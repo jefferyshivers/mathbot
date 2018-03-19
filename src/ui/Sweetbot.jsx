@@ -222,14 +222,7 @@ export default class Sweetbot extends Component {
         </div>
       </div>
     );
-    // TODO handle selectable, multi-selectable, selected
-    // this.state.current.meta.select && this.state.current.meta.select.options
-    //   ? this.state.current.meta.select.options.map(option => {
-    //       return option;
-    //     })
-    //   : null;
 
-    // TODO if meta.inputDisabled, don't remove it from DOM, but make it not-focusable
     const INPUT = (
       <div
         className={has_options ? "has-options" : ""}
