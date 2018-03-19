@@ -26,12 +26,16 @@ import defaultprops from "./defaultprops.js";
 import * as API from "../utils";
 import "./Sweetbot.scss";
 import Message from "./Message.jsx";
-// import SVG_SEND from "./send.svg";
-const delay = require("delay");
 
 const SVG_SEND = (
   <svg viewBox="0 0 100 80">
     <path d="M0,0 L97.5,35 a20,10 0 0 1 0,10 L0,80 L0,45 L60,40 L0,35 Z" />
+  </svg>
+);
+
+const SVG_MESSAGE = (
+  <svg viewBox="0 0 100 80">
+    <path d="M1,11 a10,10 0 0 1 10,-10 L89,1 a10,10 0 0 1 10,10 L99,55 a10,10 0 0 1 -10,10 L50,65 L38,79 L26,65 L11,65 a10,10 0 0 1 -10,-10 Z" />
   </svg>
 );
 
@@ -49,15 +53,11 @@ export default class Sweetbot extends Component {
 
   state = {
     waiting: false,
-    // if chat window is visible or collapsed
     open: false,
     current: {
-      // a slot for custom properties. gets updated from the response of each chat
       meta: {},
-      // the text of the input field, or index of a multiple choice response
       message: ""
     },
-    // the record of all chat messages in current session
     messages: []
   };
 
@@ -70,10 +70,8 @@ export default class Sweetbot extends Component {
   );
 
   componentDidMount() {
-    // open the bot on load. default = false
     this.customprops.onload.open && this.setState({ open: true });
 
-    // load default message. default = none
     this.customprops.onload.chat &&
       this._recordChat({
         sender: "SWEETBOT",
@@ -130,19 +128,18 @@ export default class Sweetbot extends Component {
             ? this.customprops.minimumDelay
             : 0;
 
-        if (minimumDelay) {
-          setTimeout(() => {
-            this.setState({ waiting: false });
-            this._recordChat({ sender: "SWEETBOT", chat: chat });
-            this.customprops.endpoint =
-              chat.meta.endpoint || this.customprops.endpoint;
-          }, minimumDelay);
-        } else {
+        const respond = () => {
           this.setState({ waiting: false });
           this._recordChat({ sender: "SWEETBOT", chat: chat });
           this.customprops.endpoint =
             chat.meta.endpoint || this.customprops.endpoint;
-        }
+        };
+
+        minimumDelay
+          ? setTimeout(() => {
+              respond();
+            }, minimumDelay)
+          : respond();
       }
     });
 
