@@ -125,8 +125,6 @@ export default class Sweetbot extends Component {
                 message: this.customprops.endpoint.failureResponse
               };
 
-        // chat.read = this.state.open ? true : false;
-
         const minimumDelay =
           typeof this.customprops.minimumDelay === "number"
             ? this.customprops.minimumDelay
@@ -158,7 +156,6 @@ export default class Sweetbot extends Component {
       sender,
       chat: Object.assign(chat, { read: this.state.open })
     };
-    // const { message: messageBody = "", meta = {} } = chat;
 
     this.setState({
       messages: [...this.state.messages, message],
