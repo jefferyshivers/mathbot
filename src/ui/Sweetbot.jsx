@@ -26,18 +26,7 @@ import defaultprops from "./defaultprops.js";
 import * as API from "../utils";
 import "./Sweetbot.scss";
 import Message from "./Message.jsx";
-
-const SVG_SEND = (
-  <svg viewBox="0 0 100 80">
-    <path d="M0,0 L97.5,35 a20,10 0 0 1 0,10 L0,80 L0,45 L60,40 L0,35 Z" />
-  </svg>
-);
-
-const SVG_MESSAGE = (
-  <svg viewBox="0 0 100 80">
-    <path d="M1,11 a10,10 0 0 1 10,-10 L89,1 a10,10 0 0 1 10,10 L99,55 a10,10 0 0 1 -10,10 L50,65 L38,79 L26,65 L11,65 a10,10 0 0 1 -10,-10 Z" />
-  </svg>
-);
+import { SVG_SEND, SVG_MESSAGE, SVG_HR, SVG_X } from "./svg.jsx";
 
 export default class Sweetbot extends Component {
   constructor(props) {
@@ -49,6 +38,7 @@ export default class Sweetbot extends Component {
     this._selectOption = this._selectOption.bind(this);
     this._sendIfValid = this._sendIfValid.bind(this);
     this._open = this._open.bind(this);
+    this._eraseMessages = this._eraseMessages.bind(this);
   }
 
   state = {
@@ -58,7 +48,9 @@ export default class Sweetbot extends Component {
       meta: {},
       message: ""
     },
-    messages: []
+    messages: [],
+    headerRef: null,
+    dialogOpen: false
   };
 
   // TODO change this to use assign-deep?
@@ -169,12 +161,22 @@ export default class Sweetbot extends Component {
   }
 
   _open() {
+    this.state.headerRef.blur();
     this.setState({ open: true });
     this.setState({
       messages: this.state.messages.map(message => {
         message.chat.read = true;
         return message;
       })
+    });
+  }
+
+  _eraseMessages() {
+    this.setState({
+      messages: [],
+      dialogOpen: false,
+      open: false,
+      current: { message: "", meta: {} }
     });
   }
 
@@ -200,10 +202,18 @@ export default class Sweetbot extends Component {
       ) : null;
 
     const HEADER = (
-      <div onClick={() => !this.state.open && this._open()}>
+      <div
+        ref={h => {
+          !this.state.headerRef && this.setState({ headerRef: h });
+        }}
+        onClick={() => !this.state.open && this._open()}
+        tabIndex={this.state.open ? null : "0"}
+        onKeyPress={() => !this.state.open && this._open()}
+      >
         <div>{this.customprops.name}</div>
-        <div onClick={() => this.setState({ open: false })}>-</div>
-        <div>x</div>
+        <div onClick={() => this.setState({ open: false })}>{SVG_HR}</div>
+        <div onClick={() => this.setState({ dialogOpen: true })}>{SVG_X}</div>
+        {!this.state.open ? SVG_MESSAGE : null}
       </div>
     );
 
@@ -269,16 +279,38 @@ export default class Sweetbot extends Component {
               name="text input field"
               value={this.state.current.message}
               onChange={this._changeCurrentMessage}
+              tabIndex={this.state.open ? "0" : "-1"}
               onKeyPress={this._inputKeyPress}
               disabled={this.state.current.meta.inputDisabled ? true : false}
             />
           </div>
           <div>
-            <button onClick={this._sendIfValid}>{SVG_SEND}</button>
+            <button
+              onClick={this._sendIfValid}
+              tabIndex={this.state.open ? "0" : "-1"}
+            >
+              {SVG_SEND}
+            </button>
           </div>
         </div>
       </div>
     );
+
+    const ERASE_MESSAGES = this.state.dialogOpen ? (
+      <dialog>
+        <div>
+          <p>Do you want to erase this message history?</p>
+          <button onClick={this._eraseMessages}>Yes, erase all messages</button>
+          <button
+            onClick={() => {
+              this.setState({ dialogOpen: false });
+            }}
+          >
+            No, go back to the chat
+          </button>
+        </div>
+      </dialog>
+    ) : null;
 
     return (
       <div
@@ -291,6 +323,7 @@ export default class Sweetbot extends Component {
         {MESSAGES}
         {INPUT}
         {UNREAD}
+        {ERASE_MESSAGES}
       </div>
     );
   }

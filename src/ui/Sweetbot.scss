@@ -11,7 +11,12 @@
 
 @keyframes blinking {
   0% {opacity: 1}
-  50% {opacity: 0.4}
+  50% {opacity: 0.7}
+  100% {opacity: 1}
+}
+
+@keyframes fadein {
+  0% {opacity: 0}
   100% {opacity: 1}
 }
 
@@ -41,13 +46,25 @@
   --default-collapsedShape: 25px;
   --collapsedShape: 25px;
   --sb-collapsedShape: var(--collapsedShape, --default-collapsedShape);
+  --default-headerShape: 25px 25px 0 0;
+  --headerShape: 25px 25px 0 0;
+  --sb-headerShape: var(--headerShape, --default-headerShape);
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   * {
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
     box-sizing: border-box;
-    // hardware acceleration
     -webkit-transform: translateZ(0);
     -webkit-overflow-scrolling: touch;
+    outline: none;
+
+    &:active, &:hover, &:focus {
+      outline: none;
+      border: none;
+    }
 
     ::-webkit-scrollbar {
       display: none;
@@ -59,7 +76,7 @@
   margin: 0;
   padding: 0;
   border-radius: var(--sb-shape);
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   width: calc(100vw - 40px);
@@ -83,6 +100,7 @@
     > div {
       &:first-of-type {
         height: 50px; min-height: 50px; max-height: 50px;
+        border-radius: 25px;
         cursor: pointer;
 
         > div {
@@ -95,6 +113,9 @@
             transform: scale(0);
           }
         }
+      }
+      &:nth-of-type(2), &:nth-of-type(3) {
+        opacity: 0;
       }
     }
   }
@@ -115,6 +136,11 @@
       transition: height 0.3s, min-height 0.3s, max-height 0.3s;
       padding: 20px;
       cursor: default;
+      border-radius: var(--sb-headerShape);
+
+      &:focus {
+        border: 1px solid pink;
+      }
 
       > div {
         position: relative;
@@ -130,14 +156,26 @@
           transition: opacity 0.4s;
         }
         &:nth-of-type(2), &:nth-of-type(3) {
-          width: 30px; min-width: 30px; max-width: 30px;
-          height: 30px; min-height: 30px; max-height: 30px;
+          width: 25px; min-width: 25px; max-width: 25px;
+          height: 25px; min-height: 25px; max-height: 25px;
           border-radius: 50%;
           border: 1px solid white;
           cursor: pointer;
           color: var(--accentColor);
           display: flex; justify-content: center; align-items: center;
           transform: scale(1);
+
+          > svg {
+            position: absolute;
+            margin: auto;
+            top: 0; bottom: 0; left: 0; right: 0;
+            width: 50%;
+
+            > path {
+              stroke: rgb(49, 49, 49);
+              stroke-width: 8px;
+            }
+          }
         }
         &:nth-of-type(2) {
           // minimize
@@ -146,12 +184,37 @@
           transition: transform 0.3s;
         }
         &:nth-of-type(3) {
-          // close: minimize and erase
+          // close: minimize and erase message history
           background: rgb(255, 176, 176);
           transition: transform 0.6s;
+
+          > svg {
+            transform: rotateZ(45deg)
+          }
         }
       }
+
+      > svg {
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0; margin: auto;
+        width: 20px;
+        -webkit-filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
+        filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
+
+        path { fill: none; stroke-width: 8px; stroke: rgb(248, 248, 248); }
+
+        animation-name: fadein;
+        animation-duration: 1s;
+        animation-iteration-count: 1;
+      }
     }
+
+    &:nth-of-type(2), &:nth-of-type(3) {
+      transition: opacity 0.3s;
+      opacity: 1;
+    }
+
     &:nth-of-type(2) {
       // messages
       height: 100%;
@@ -322,12 +385,18 @@
               display: inline-block;
               font-size: 0.8em;
               height: 30px;
-              padding: 5px 10px;
+              padding: 7px 10px 4px;
               border-radius: 15px;
               border: 1px solid rgb(224, 224, 224);
               cursor: pointer;
               box-sizing: border-box;
               background: white;
+
+              -moz-user-select: none;
+              -khtml-user-select: none;
+              -webkit-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
 
               &.selected {
                 border: 1px solid var(--sb-accentColor);
@@ -432,21 +501,77 @@
     }
     &.Unread {
       position: absolute;
-      width: 23px;
-      height: 23px;
+      width: 17px;
+      height: 17px;
+      font-size: 0.8em;
       box-sizing: border-box;
-      top: 4px;
-      left: 4px;
+      top: 0px;
+      left: 0px;
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
-      text-shadow: 0 0 4px black;
+      text-shadow: 0 0 3px rgba(20,20,20,.4);
       cursor: pointer;
+      background: rgb(206, 0, 0);
+      border-radius: 50%;
 
       animation-name: blinking;
-      animation-iteration-count: infinite;
+      animation-iteration-count: 2;
       animation-duration: 1.4s;
+    }
+  }
+
+  > dialog {
+    display: flex;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(241, 241, 241, 0.884);
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--sb-shape);
+    border: none;
+
+    > div {
+      width: calc(100% - 10px);
+      height: auto;
+      margin: auto;
+      background: white;
+      box-sizing: border-box;
+      padding: 15px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      > p {
+        margin: 0; padding: 0;
+      }
+
+      > button {
+        position: relative;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 10px;
+        background: rgb(97, 97, 97);
+        color: white;
+        cursor: pointer;
+        border: none;
+        outline: none;
+
+        &:first-of-type {
+          margin: 10px auto 6px;
+        }
+
+        &:focus, &:active {
+          border: none;
+          outline: none;
+          box-shadow: none;
+        }
+
+        &:hover {
+          background: rgb(114, 114, 114);
+        }
+      }
     }
   }
 }
