@@ -39,6 +39,7 @@ export default class Sweetbot extends Component {
     this._sendIfValid = this._sendIfValid.bind(this);
     this._open = this._open.bind(this);
     this._eraseMessages = this._eraseMessages.bind(this);
+    this._scrollBottom = this._scrollBottom.bind(this);
   }
 
   state = {
@@ -50,7 +51,8 @@ export default class Sweetbot extends Component {
     },
     messages: [],
     headerRef: null,
-    dialogOpen: false
+    dialogOpen: false,
+    messagesRef: null
   };
 
   // TODO change this to use assign-deep?
@@ -146,9 +148,22 @@ export default class Sweetbot extends Component {
       chat: Object.assign(chat, { read: this.state.open })
     };
 
-    this.setState({
-      messages: [...this.state.messages, message],
-      current: Object.assign(this.state.current, { meta: chat.meta })
+    this.setState(
+      {
+        messages: [...this.state.messages, message],
+        current: Object.assign(this.state.current, { meta: chat.meta })
+      },
+      () => {
+        process.nextTick(this._scrollBottom);
+      }
+    );
+  }
+
+  _scrollBottom() {
+    const messages = this.state.messagesRef.children;
+    messages[messages.length - 1].scrollIntoView({
+      block: "end",
+      behavior: "smooth"
     });
   }
 
@@ -217,27 +232,36 @@ export default class Sweetbot extends Component {
       </div>
     );
 
-    const MESSAGES = (
-      <div>
+    const MESSAGES =
+      this.state.messages.length > 0 ? (
         <div>
-          {this.state.messages.map((message, index) => (
-            <Message
-              key={`message-${index}-${message.sender}`}
-              messageprops={message}
-            />
-          ))}
-          {this.state.waiting ? (
-            <div className="Message WAITING">
-              <div>
-                <div />
-                <div />
-                <div />
+          <div
+            ref={m => {
+              !this.state.messagesRef && this.setState({ messagesRef: m });
+            }}
+          >
+            {this.state.messages.map((message, index) => (
+              <Message
+                key={`message-${index}-${message.sender}`}
+                messageprops={message}
+              />
+            ))}
+            {this.state.waiting ? (
+              <div className="Message WAITING">
+                <div>
+                  <div />
+                  <div />
+                  <div />
+                </div>
               </div>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
-      </div>
-    );
+      ) : (
+        <div>
+          <div className="no-messages">{SVG_MESSAGE}</div>
+        </div>
+      );
 
     const has_options =
       this.state.current.meta.options &&

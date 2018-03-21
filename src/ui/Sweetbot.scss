@@ -76,7 +76,7 @@
   margin: 0;
   padding: 0;
   border-radius: var(--sb-shape);
-  overflow: visible;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   width: calc(100vw - 40px);
@@ -86,12 +86,18 @@
   background-color: white;
   box-shadow: 0 0 10px rgba(20,20,20,.5);
   box-sizing: border-box;
-  transition: height 0.4s, width 0.4s, border-radius 0.3s, box-shadow 0.2s;
+  transition: height 0.4s 0.1s, width 0.4s, border-radius 0s 0.3s, box-shadow 0.2s;
 
   &.collapsed {
     height: 50px;
     width: 50px;
     border-radius: var(--sb-collapsedShape);
+    overflow: visible;
+    transition: height 0.4s, width 0.4s 0.4s, border-radius 0s 0.3s, box-shadow 0.2s, overflow 0s 0.8s;
+
+    .no-messages {
+      display: none;
+    }
 
     &:hover {
       box-shadow: 0 0 24px rgba(20,20,20,.4);
@@ -102,6 +108,7 @@
         height: 50px; min-height: 50px; max-height: 50px;
         border-radius: 25px;
         cursor: pointer;
+        transition: height 0.3s, min-height 0.3s, max-height 0.3s, border-radius 0.3s;
 
         > div {
           &:first-of-type {
@@ -133,7 +140,7 @@
       color: var(--sb-headerColor);
       display: flex;
       flex-direction: row;
-      transition: height 0.3s, min-height 0.3s, max-height 0.3s;
+      transition: height 0.3s 0.1s, min-height 0.3s 0.1s, max-height 0.3s 0.1s, border-radius 0.3s;
       padding: 20px;
       cursor: default;
       border-radius: var(--sb-headerShape);
@@ -201,12 +208,13 @@
         width: 20px;
         -webkit-filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
         filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
-
-        path { fill: none; stroke-width: 8px; stroke: rgb(248, 248, 248); }
-
         animation-name: fadein;
         animation-duration: 1s;
         animation-iteration-count: 1;
+
+        path {
+          fill: none; stroke-width: 8px; stroke: rgb(248, 248, 248);
+        }
       }
     }
 
@@ -223,7 +231,7 @@
       display: flex;
       flex-direction: column;
 
-      > div {
+      > div:not(.no-messages) {
         position: relative;
         margin-top: auto;
         max-height: 100%;
@@ -232,22 +240,31 @@
         > .Message {
           position: relative;
           width: 100%;
-          padding: 10px;
+          padding: 5px 10px;
           display: flex;
+
+          &:first-of-type {
+            padding-top: 10px;
+          }
+          &:last-of-type {
+            padding-bottom: 10px;
+          }
 
           &.SWEETBOT {
             animation-name: addmessage;
             animation-iteration-count: 1;
-            animation-duration: 1s;
+            animation-duration: 1.2s;
 
             > div {
               margin-right: auto;
+              border: 1px solid var(--sb-accentColor);
             }
           }
 
           &.HUMAN {
             > div {
               margin-left: auto;
+              border: 1px solid rgba(40,40,40,.1);
             }
           }
 
@@ -303,8 +320,27 @@
             display: inline-block;
             padding: 10px;
             background: white;
-            border: 1px solid rgba(40,40,40,.1);
             border-radius: 6px;
+          }
+        }
+      }
+
+      > div.no-messages {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        > svg {
+          position: absolute;
+          top: 0; bottom: 0;
+          left: 0; right: 0; margin: auto;
+          width: 100px;
+          animation-name: fadein;
+          animation-duration: 1s;
+          animation-iteration-count: 1;
+
+          path {
+            fill: none; stroke-width: 2px; stroke: rgb(240, 240, 240);
           }
         }
       }
@@ -316,6 +352,7 @@
       flex-direction: column;
       background: white;
       width: 100%;
+      border-radius: 0 0 10px 10px;
 
       &.has-options {
         height: 110px; min-height: 110px; max-height: 110px;
