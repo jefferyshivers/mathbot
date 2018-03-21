@@ -36,6 +36,7 @@ let requireAll = requireContext => {
 };
 
 // require all js files except testHelper.js in the test folder
+requireAll(require.context("./", true, /^((?!testHelper).)*\.js?$/));
 requireAll(require.context("./", true, /^((?!testHelper).)*\.jsx?$/));
 
 // output to the browser's console when the tests run

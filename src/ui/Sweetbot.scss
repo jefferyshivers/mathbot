@@ -16,8 +16,21 @@
 }
 
 @keyframes fadein {
-  0% {opacity: 0}
-  100% {opacity: 1}
+  0% {fill: rgba(255,255,255,0)}
+  100% {fill: rgba(255,255,255,1)}
+}
+
+@keyframes tilt {
+  0% {transform: rotateZ(0deg)}
+  30% {transform: rotateZ(-20deg)}
+  40% {transform: rotateZ(-20deg)}
+  80% {transform: rotateZ(10deg)}
+  100% {transform: rotateZ(0deg)}
+}
+
+@keyframes spin {
+  0% {transform: rotateZ(0deg)}
+  100% {transform: rotateZ(360deg)}
 }
 
 .Sweetbot {
@@ -86,14 +99,14 @@
   background-color: white;
   box-shadow: 0 0 10px rgba(20,20,20,.5);
   box-sizing: border-box;
-  transition: height 0.4s 0.1s, width 0.4s, border-radius 0s 0.3s, box-shadow 0.2s;
+  transition: height 0.4s 0.1s, width 0.4s, border-radius 0.3s, box-shadow 0.2s;
 
   &.collapsed {
     height: 50px;
     width: 50px;
     border-radius: var(--sb-collapsedShape);
     overflow: visible;
-    transition: height 0.4s, width 0.4s 0.4s, border-radius 0s 0.3s, box-shadow 0.2s, overflow 0s 0.8s;
+    transition: height 0.4s, width 0.4s 0.4s, border-radius 0.3s 0.3s, box-shadow 0.2s, overflow 0s 0.8s;
 
     .no-messages {
       display: none;
@@ -119,6 +132,14 @@
             transition: transform 0.2s;
             transform: scale(0);
           }
+        }
+
+        > svg {
+          animation-name: tilt;
+          // animation-name: spin;
+          animation-duration: 1s;
+          animation-iteration-count: 1;
+          animation-delay: 0.4s;
         }
       }
       &:nth-of-type(2), &:nth-of-type(3) {
@@ -161,12 +182,17 @@
           align-items: center;
           opacity: 1;
           transition: opacity 0.4s;
+
+          > h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.4em;
+          }
         }
         &:nth-of-type(2), &:nth-of-type(3) {
-          width: 25px; min-width: 25px; max-width: 25px;
-          height: 25px; min-height: 25px; max-height: 25px;
+          width: 20px; min-width: 20px; max-width: 20px;
+          height: 20px; min-height: 20px; max-height: 20px;
           border-radius: 50%;
-          border: 1px solid white;
           cursor: pointer;
           color: var(--accentColor);
           display: flex; justify-content: center; align-items: center;
@@ -176,10 +202,10 @@
             position: absolute;
             margin: auto;
             top: 0; bottom: 0; left: 0; right: 0;
-            width: 50%;
+            width: 40%;
 
             > path {
-              stroke: rgb(49, 49, 49);
+              stroke: rgb(100,100,100);
               stroke-width: 8px;
             }
           }
@@ -205,15 +231,15 @@
         position: absolute;
         top: 0; bottom: 0;
         left: 0; right: 0; margin: auto;
-        width: 20px;
-        -webkit-filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
-        filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
-        animation-name: fadein;
-        animation-duration: 1s;
-        animation-iteration-count: 1;
+        width: 22px;
+        // -webkit-filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
+        // filter: drop-shadow( 0 0 10px rgba(20,20,20,.8) );
 
         path {
-          fill: none; stroke-width: 8px; stroke: rgb(248, 248, 248);
+          fill: white; stroke-width: 0;
+          animation-name: fadein;
+          animation-duration: 1s;
+          animation-iteration-count: 1;
         }
       }
     }
@@ -417,12 +443,12 @@
             display: flex;
             align-items: center;
 
-            > div {
+            > button {
               position: relative;
               display: inline-block;
               font-size: 0.8em;
               height: 30px;
-              padding: 7px 10px 4px;
+              padding: 5px 10px 4px;
               border-radius: 15px;
               border: 1px solid rgb(224, 224, 224);
               cursor: pointer;
@@ -434,6 +460,10 @@
               -webkit-user-select: none;
               -ms-user-select: none;
               user-select: none;
+
+              &:focus, &.selected:focus {
+                background: rgb(250, 250, 250);
+              }
 
               &.selected {
                 border: 1px solid var(--sb-accentColor);
@@ -509,7 +539,7 @@
                 cursor: pointer;
 
                 &:focus {
-                  // background: pink;
+                  background: rgb(247, 247, 247);
                 }
 
                 &:hover {
@@ -563,7 +593,7 @@
     display: flex;
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(241, 241, 241, 0.884);
+    background: rgba(68, 68, 68, 0.589);
     justify-content: center;
     align-items: center;
     border-radius: var(--sb-shape);

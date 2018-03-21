@@ -21,7 +21,9 @@
  * THE SOFTWARE.
  */
 
-const assign = require("assign-deep");
+// disabled temporarily
+// TODO reimplement
+// const assign = require("assign-deep");
 
 const defaults = {
   name: "sweetbot",
@@ -64,6 +66,6 @@ const auto = {
  * @returns {Object} default props
  */
 const defaultprops = autoprops =>
-  autoprops ? assign({}, defaults, auto) : Object.assign({}, defaults);
+  autoprops ? Object.assign({}, defaults, auto) : Object.assign({}, defaults);
 
 export default defaultprops;

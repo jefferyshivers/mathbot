@@ -40,6 +40,7 @@ export default class Sweetbot extends Component {
     this._open = this._open.bind(this);
     this._eraseMessages = this._eraseMessages.bind(this);
     this._scrollBottom = this._scrollBottom.bind(this);
+    this._focusOption = this._focusOption.bind(this);
   }
 
   state = {
@@ -50,9 +51,11 @@ export default class Sweetbot extends Component {
       message: ""
     },
     messages: [],
-    headerRef: null,
     dialogOpen: false,
-    messagesRef: null
+    headerRef: null,
+    messagesRef: null,
+    optionsRef: null,
+    sendRef: null
   };
 
   // TODO change this to use assign-deep?
@@ -175,6 +178,14 @@ export default class Sweetbot extends Component {
     });
   }
 
+  _focusOption(i) {
+    const options = this.state.optionsRef.children;
+    options[i].scrollIntoView({
+      block: "nearest",
+      behavior: "smooth"
+    });
+  }
+
   _open() {
     this.state.headerRef.blur();
     this.setState({ open: true });
@@ -225,7 +236,9 @@ export default class Sweetbot extends Component {
         tabIndex={this.state.open ? null : "0"}
         onKeyPress={() => !this.state.open && this._open()}
       >
-        <div>{this.customprops.name}</div>
+        <div>
+          <h2>{this.customprops.name}</h2>
+        </div>
         <div onClick={() => this.setState({ open: false })}>{SVG_HR}</div>
         <div onClick={() => this.setState({ dialogOpen: true })}>{SVG_X}</div>
         {!this.state.open ? SVG_MESSAGE : null}
@@ -269,21 +282,29 @@ export default class Sweetbot extends Component {
 
     const OPTIONS = (
       <div className="Options">
-        <div>
+        <div
+          ref={o => {
+            !this.state.optionsRef && this.setState({ optionsRef: o });
+          }}
+        >
           {has_options &&
             this.state.current.meta.options.map((option, index) => {
               return (
-                <div
+                <button
                   className={
                     this.state.current.message === option ? "selected" : ""
                   }
+                  tabIndex="0"
+                  onFocus={() => {
+                    this._focusOption(index);
+                  }}
                   key={`sweetbot-option-${index}`}
                   onClick={() => {
                     this._selectOption(index);
                   }}
                 >
                   {option}
-                </div>
+                </button>
               );
             })}
         </div>
@@ -310,7 +331,13 @@ export default class Sweetbot extends Component {
           </div>
           <div>
             <button
-              onClick={this._sendIfValid}
+              ref={s => {
+                !this.state.sendRef && this.setState({ sendRef: s });
+              }}
+              onClick={() => {
+                this._sendIfValid();
+                this.state.sendRef.blur();
+              }}
               tabIndex={this.state.open ? "0" : "-1"}
             >
               {SVG_SEND}

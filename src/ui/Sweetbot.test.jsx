@@ -51,23 +51,12 @@ describe("Sweetbot", () => {
   it("has autoprops", () => {
     let wrapper = shallow(<Sweetbot auto={true} />);
 
-    expect(wrapper.state().open).to.equal(true);
-    expect(wrapper.state().messages.length).to.equal(1);
     expect(wrapper.instance().customprops).to.deep.equal(defaultprops(true));
   });
 
   it("has defaultprops", () => {
     let wrapper = shallow(<Sweetbot auto={false} />);
 
-    expect(wrapper.state()).to.deep.equal({
-      waiting: false,
-      open: false,
-      current: {
-        meta: {},
-        message: ""
-      },
-      messages: []
-    });
     expect(wrapper.instance().customprops).to.deep.equal(defaultprops(false));
   });
 
