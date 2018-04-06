@@ -13,7 +13,38 @@ module.exports = Chat => {
       }
     },
     "Prospective user": {
-      message: "Awesome, thanks for checking this out then!",
+      message: [
+        "Awesome, thanks for checking this out then!",
+        "Let me know if you have any questions",
+        "Enjoy!",
+        {
+          type: "p",
+          content: "here is another p..."
+        },
+        {
+          type: "p",
+          content: {
+            type: "a",
+            href: "https://www.test.com",
+            content: "and a link!"
+          }
+        },
+        {
+          type: "p",
+          content: [
+            "This is a long response. It actually looks like a paragraph, but we've simply inserted a break (<br/>) to give the impression of two paragraphs.",
+            { type: "br" },
+            {
+              type: "a",
+              content: "Here's a link, too!"
+            },
+            { type: "br" },
+            "And here's another break. Here's a ",
+            { type: "a", content: "link" },
+            " inside the text. Sweet"
+          ]
+        }
+      ],
       meta: {}
     },
     "Already using sweetbot": {

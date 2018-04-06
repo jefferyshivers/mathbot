@@ -21,8 +21,7 @@
  * THE SOFTWARE.
  */
 
-// valid input:
-// ex.1
+// parseMessage example:
 // input: "test" =>
 // output: [
 //   {
@@ -36,8 +35,18 @@
 //   }
 // ]
 
+/**
+ * Return the chunk(s) as an array.
+ * @param {Array|string} chunks
+ * @returns {Array} the resulting array
+ */
 const splitIntoChunks = chunks => (Array.isArray(chunks) ? chunks : [chunks]);
 
+/**
+ * Compose an endpoint.
+ * @param {Object|string} message
+ * @returns {Object} a message object
+ */
 const messageToObject = message => {
   switch (typeof message) {
     case "string":
@@ -52,6 +61,11 @@ const messageToObject = message => {
   }
 };
 
+/**
+ * Compose a paragraph array from a string, paragraph object, or mixed array of strings and paragraph objects.
+ * @param {Array|Object|string} par
+ * @returns {Array} an array of paragraph objects with inline text and anchors
+ */
 const parsePar = par => {
   return splitIntoChunks(par).map(item => {
     switch (typeof item) {
@@ -68,8 +82,22 @@ const parsePar = par => {
   });
 };
 
+const parseJSON = test => {
+  try {
+    JSON.parse(test);
+  } catch (e) {
+    return test;
+  }
+  return JSON.parse(test);
+};
+
+/**
+ * Compose a message array from any combination of strings, paragraph objects/arrays, and message objects.
+ * @param {Array|Object|string} message
+ * @returns {Array} an array of message objects
+ */
 const parseMessage = message => {
-  return splitIntoChunks(message)
+  return splitIntoChunks(parseJSON(message))
     .map(messageToObject)
     .map(messageObject => {
       switch (messageObject.type) {

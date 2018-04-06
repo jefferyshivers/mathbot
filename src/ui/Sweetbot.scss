@@ -22,7 +22,7 @@
 
 @keyframes tilt {
   0% {transform: rotateZ(0deg)}
-  30% {transform: rotateZ(-20deg)}
+  35% {transform: rotateZ(-20deg)}
   40% {transform: rotateZ(-20deg)}
   80% {transform: rotateZ(10deg)}
   100% {transform: rotateZ(0deg)}
@@ -73,6 +73,8 @@
     -webkit-transform: translateZ(0);
     -webkit-overflow-scrolling: touch;
     outline: none;
+    margin: 0;
+    padding: 0;
 
     &:active, &:hover, &:focus {
       outline: none;
@@ -347,6 +349,17 @@
             padding: 10px;
             background: white;
             border-radius: 6px;
+
+            a {
+              color: var(--sb-accentColor);
+              text-decoration: underline;
+            }
+
+            > p {
+              br {
+                line-height: 2em;
+              }
+            }
           }
         }
       }

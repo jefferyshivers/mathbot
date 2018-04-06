@@ -24,6 +24,7 @@
 import React, { Component } from "react";
 import defaultprops from "./defaultprops.js";
 import * as API from "../utils";
+import * as messageParser from "../utils/messageParser.js";
 import "./Sweetbot.scss";
 import Message from "./Message.jsx";
 import { SVG_SEND, SVG_MESSAGE, SVG_HR, SVG_X } from "./svg.jsx";
@@ -148,7 +149,10 @@ export default class Sweetbot extends Component {
     const message = {
       timestamp,
       sender,
-      chat: Object.assign(chat, { read: this.state.open })
+      chat: Object.assign(chat, {
+        read: this.state.open,
+        message: messageParser.parseMessage(chat.message)
+      })
     };
 
     this.setState(

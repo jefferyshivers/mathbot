@@ -23,11 +23,59 @@
 
 import React, { Component } from "react";
 
+// example chat.message structure:
+// [
+//   {
+//     type: 'p',
+//     content: [
+//       {
+//         type: 'text',
+//         content: 'test'
+//       }
+//     ]
+//   }
+// ]
+
 const Message = props => {
+  const parsePar = par => {
+    return par.content.map(c => {
+      switch (c.type) {
+        case "text":
+          return c.content;
+        case "a":
+          return <a href={c.href ? c.href : "/"}>{c.content}</a>;
+        case "br":
+          return <br />;
+        default:
+          return c.content;
+      }
+    });
+  };
+
+  const parseMessageChunk = chunk => {
+    switch (chunk.type) {
+      case "p":
+        return <p>{parsePar(chunk)}</p>;
+      default:
+        return <p>foo</p>;
+    }
+  };
+
   return (
-    <div className={`Message ${props.messageprops.sender}`}>
-      <div>{props.messageprops.chat.message}</div>
-    </div>
+    <React.Fragment>
+      {props.messageprops.chat.message.map((message, index) => {
+        return (
+          <div
+            key={`${props.messageprops.sender}--${
+              props.messageprops.timestamp
+            }--${index}`}
+            className={`Message ${props.messageprops.sender}`}
+          >
+            <div>{parseMessageChunk(message)}</div>
+          </div>
+        );
+      })}
+    </React.Fragment>
   );
 };
 

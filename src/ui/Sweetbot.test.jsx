@@ -147,7 +147,7 @@ describe("Sweetbot", () => {
     describe("_postChat()", () => {
       beforeEach(() => {
         let stub = sinon.stub(window, "fetch"); //add stub
-        stub.onCall(0).returns(jsonOk({}));
+        stub.onCall(0).returns(jsonOk({ message: "foo", meta: {} }));
       });
 
       afterEach(() => {
